@@ -1,0 +1,1876 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="viewport" content="initial-scale=1.0; maxiumum-scale=1.0; user-scalable=no" />
+<meta name="format-detection" content="telephone=no" />
+<title>Flood Zone NYC</title>
+<meta name="description" content="Map of New York City Flood Zones as well as information about evacuation centers and how to prepare for a storm" />
+<link href="style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=true">
+</script>
+<!--
+
+		START Google Map Function Scripts 
+
+-->
+<script type="text/javascript">
+var geocoder;
+var map;
+function initialize() {
+	
+	//Mobile Device Optimizations//
+	
+	setTimeout(function() {
+		if((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)) ||(navigator.userAgent.match(/iPad/i)) || (navigator.userAgent.match(/webOS/i))) {
+			setTimeout(function() {
+				window.scrollTo(0, 1);
+			}, 0);
+		}
+		if(navigator.userAgent.match(/Android/i)) {
+			document.getElementById('searchform').style.marginTop="-20px";
+			setTimeout(function() {
+				window.scrollTo(0, 1);
+			}, 0);
+		}
+	});
+	
+	
+	//Google Maps code//
+	var styleArray = [
+		{
+			featureType: "road.arterial",
+			elementType: "geometry",
+			stylers: [
+				{ hue: "#666666" },
+				{ saturation: -100 },
+				{ lightness: 0 }
+			]
+		},{
+			featureType: "road.highway",
+			elementType: "geometry",
+			stylers: [
+				{ hue: "#A710DE" },
+				{ saturation: -90 },
+				{ lightness: 20 }
+			]
+		},{
+			featureType: "water",
+			stylers: [
+				{ hue: "#3F5375" },
+				{ saturation: -50 },
+				{ lightness: 0 }
+			]
+		}
+	];
+	var nyc = new google.maps.LatLng(40.73, -73.95);
+	geocoder = new google.maps.Geocoder();
+	map = new google.maps.Map(document.getElementById('map_canvas'), {
+  		center: nyc,
+  		zoom: 12,
+		disableDefaultUI: true,
+		zoomControl: true,
+		zoomControlOptions: {
+			position: google.maps.ControlPosition.LEFT_CENTER
+		},
+		panControl: false,
+  		mapTypeId: 'roadmap',
+	});
+	var zones = new google.maps.FusionTablesLayer({
+		query: {
+			select: 'geometry',
+			from: '1351984'
+		},
+		clickable: 0,
+		styles: [{
+			polygonOptions: {
+				fillColor: "#AA2C1F",
+				fillOpacity: 0.4
+			}
+		},{
+			where:"ZONE = 'B'",
+			polygonOptions: {
+				fillColor: "#DC9427"
+			}
+		},{
+			where:"ZONE = 'C'",
+			polygonOptions: {
+				fillColor: "#EFEF3A"
+			}
+		}]
+	});
+	
+	var locations = new google.maps.FusionTablesLayer({
+  		query: {
+    		select: 'Geocodable address',
+    		from: '2047825'
+  		},
+	});
+	zones.setMap(map);
+	locations.setMap(map);
+	map.setOptions({styles: styleArray});
+	
+	
+	
+	
+	
+	//Popup DIV size properties//
+	if (window.innerWidth >= 796) {
+		document.getElementById("navigation").style.display="inline";
+		document.getElementById("navsmall").style.display="none";
+		
+		//resizers//
+		//document.getElementById("closeevac").style.width="542px";
+		//document.getElementById("closeevac").style.left="50%";
+		//document.getElementById("closeevac").style.marginLeft="-271px";
+		//document.getElementById("evaclist").getAttribute(ul).style.width="542px";
+		//document.getElementById("evaclist").getAttribute(ul).style.left="50%";
+		//document.getElementById("evaclist").getAttribute(ul).style.marginLeft="-271px";
+		
+	}
+	if (window.innerWidth < 796) {
+		document.getElementById("navigation").style.display="none";
+		document.getElementById("navsmall").style.display="inline";
+	}
+	if (window.innerWidth > 500) {
+		document.getElementById("searchbox").style.width="300px";
+	}
+	if (window.innerWidth <= 500) {
+		document.getElementById("searchbox").style.width="200px";
+	}
+	if (window.innerWidth <= 390) {
+		document.getElementById("searchbox").style.width="100px";
+	}
+}
+function activeTextbox() {
+	if (window.innerWidth < 796) {
+		var searchPrior = document.getElementById('searchbox').width;
+		document.getElementById('searchbox').style.width = searchPrior + 100 + "px";
+		if (window.innerWidth <= 390) {
+			document.getElementById('navsmall').style.display = "none";
+		}
+	}
+}
+function codeAddress() {
+	var address = document.getElementById("searchbox").value;
+	geocoder.geocode( { 'address': address}, function(results, status) {
+		if (status == google.maps.GeocoderStatus.OK) {
+			map.setCenter(results[0].geometry.location);
+			map.setZoom(14);
+            var lastEntry = results[0].geometry.location;
+			var geoLocated = results[0].geometry.location;
+        	var marker = new google.maps.Marker({
+				position: results[0].geometry.location,
+				map: map
+			});
+			marker.setAnimation(google.maps.Animation.DROP);
+			infowindow.setContent("Test");
+			infowindow.open(map, marker);
+		}
+		// results[4].formatted_address should be able to cull borough, allowing for distance API to have culled lists, allowing directions API to function
+			// See if FusionTable can be used to pull results only for particular borough using distance api
+	});
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+	document.getElementById("searchbox").value = '';
+	window.scrollTo(0, 1);
+}
+
+// Evacuation Center Zoom in function, respons to activation via evacuation center list in absolutely placed div centered
+function locationOne() {
+	var firstlocation = new google.maps.LatLng(40.74349987900007, -73.92930675499991)
+	map.setCenter(firstlocation);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 1;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationTwo() {
+	var twolocation = new google.maps.LatLng(40.74011461400005, -73.98359086199991)
+	map.setCenter(twolocation);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 2;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	};
+	setTimeout(200);
+}
+function locationThree() {
+	var locationthree = new google.maps.LatLng(40.77146613100007, -73.78078813299993)
+	map.setCenter(locationthree);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 3;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationFour() {
+	var locationfour = new google.maps.LatLng(40.71074034500003, -73.72635998399994)
+	map.setCenter(locationfour);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 4;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationFive() {
+	var locationfive = new google.maps.LatLng(40.67891607700005, -73.93162304799995)
+	map.setCenter(locationfive);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 5;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationSix() {
+	var locationsix = new google.maps.LatLng(40.817315541000085, -73.94739898899991)
+	map.setCenter(locationsix);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 6;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationSeven() {
+	var locationseven = new google.maps.LatLng(40.85722724100009, -73.91023097099992)
+	map.setCenter(locationseven);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 7;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationEight() {
+	var locationeight = new google.maps.LatLng(40.68901756100007, -73.97645432799993)
+	map.setCenter(locationeight);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 8;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationNine() {
+	var locationnine = new google.maps.LatLng(40.69688880800004, -73.9118267209999)
+	map.setCenter(locationnine);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 9;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationTen() {
+	var locationten = new google.maps.LatLng(40.819551027000045, -73.95046535999995)
+	map.setCenter(locationten);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 10;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationEleven() {
+	var locationeleven = new google.maps.LatLng(40.66926033300007, -73.96135883099993)
+	map.setCenter(locationeleven);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 11;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationTwelve() {
+	var locationtwelve = new google.maps.LatLng(40.64536866100008, -74.08185583099993)
+	map.setCenter(locationtwelve);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 12;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationThirteen() {
+	var locationthirteen = new google.maps.LatLng(40.87545842800006, -73.86147513899994)
+	map.setCenter(locationthirteen);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 13;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationFourteen() {
+	var locationfourteen = new google.maps.LatLng(40.765089543000045, -73.82663921499994)
+	map.setCenter(locationfourteen);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 14;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationFifteen() {
+	var locationfifteen = new google.maps.LatLng(40.72976691800005, -73.84480826999993)
+	map.setCenter(locationfifteen);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 15;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationSixteen() {
+	var locationsixteen = new google.maps.LatLng(40.620912761000056, -73.98185609599994)
+	map.setCenter(locationsixteen);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 16;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationSeventeen() {
+	var locationseventeen = new google.maps.LatLng(40.692745398000056, -73.86893333099994)
+	map.setCenter(locationseventeen);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 17;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationEighteen() {
+	var locationeighteen = new google.maps.LatLng(40.85560891200004, -73.92622858399994)
+	map.setCenter(locationeighteen);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 18;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationNineteen() {
+	var locationnineteen = new google.maps.LatLng(40.711454737000054, -73.90895232999992)
+	map.setCenter(locationnineteen);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 19;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationTwenty() {
+	var locationtwenty = new google.maps.LatLng(40.87410887700008, -73.83309568899995)
+	map.setCenter(locationtwenty);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 20;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationTwentyone() {
+	var locationtwentyone = new google.maps.LatLng(40.70968163500004, -73.80258031499994)
+	map.setCenter(locationtwentyone);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 21;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationTwentytwo() {
+	var locationtwentytwo = new google.maps.LatLng(40.768706146000056, -73.96503767099995)
+	map.setCenter(locationtwentytwo);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 22;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationTwentythree() {
+	var locationtwentyhree = new google.maps.LatLng(40.69248384900004, -73.95829320199994)
+	map.setCenter(locationtwentythree);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 23;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationTwentyfour() {
+	var locationtwentyfour = new google.maps.LatLng(40.79152057500005, -73.97092045699992)
+	map.setCenter(locationtwentyfour);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 24;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationTwentyfive() {
+	var locationtwentyfive = new google.maps.LatLng(40.65196447500006, -74.00731418299995)
+	map.setCenter(locationtwentyfive);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 25;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationTwentysix() {
+	var locationtwentysix = new google.maps.LatLng(40.82786891200004, -73.91405909899993)
+	map.setCenter(locationtwentysix);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 26;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationTwentyseven() {
+	var locationtwentyseven = new google.maps.LatLng(40.627852730000086, -74.00396205099992)
+	map.setCenter(locationtwentyseven);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 27;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationTwentyeight() {
+	var locationtwentyeight = new google.maps.LatLng(40.815603304000035, -73.88551287299993)
+	map.setCenter(locationtwentyeight);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 28;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationTwentynine() {
+	var locationtwentynine = new google.maps.LatLng(40.648526666000066, -73.95337508199992)
+	map.setCenter(locationtwentynine);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 29;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationThirty() {
+	var locationthirty = new google.maps.LatLng(40.67815125700008, -73.91584945099993)
+	map.setCenter(locationthirty);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 30;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationThirtyone() {
+	var locationthirtyone = new google.maps.LatLng(40.67156193900007, -73.89329366099992)
+	map.setCenter(locationthirtyone);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 31;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationThirtytwo() {
+	var locationthirtytwo = new google.maps.LatLng(40.697531179000066, -73.91941665199994)
+	map.setCenter(locationthirtytwo);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 32;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationThirtythree() {
+	var locationthirtythree = new google.maps.LatLng(40.62289560700009, -74.14503434599993)
+	map.setCenter(locationthirtythree);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 33;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationThirtyfour() {
+	var locationthirtyfour = new google.maps.LatLng(40.80255395700004, -73.95411230499991)
+	map.setCenter(locationthirtyfour);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 34;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationThirtyfive() {
+	var locationthirtyfive = new google.maps.LatLng(40.83940557100004, -73.93582337099991)
+	map.setCenter(locationthirtyfive);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 35;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationThirtysix() {
+	var locationthirtysix = new google.maps.LatLng(40.83614545100005, -73.89059919899995)
+	map.setCenter(locationthirtysix);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 36;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationThirtyseven() {
+	var locationthirtyseven = new google.maps.LatLng(40.77493748000006, -73.81863882499994)
+	map.setCenter(locationthirtyseven);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 37;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationThirtyeight() {
+	var locationthirtyeight = new google.maps.LatLng(40.678821043000085, -73.83698782899995)
+	map.setCenter(locationthirtyeight);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 38;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationThirtynine() {
+	var locationthirtynine = new google.maps.LatLng(40.77036516900006, -73.98664788399992)
+	map.setCenter(locationthirtynine);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 39;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationFourty() {
+	var locationfourty = new google.maps.LatLng(40.66940124800004, -73.97885730099995)
+	map.setCenter(locationfourty);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 40;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationFourtyone() {
+	var locationfourtyone = new google.maps.LatLng(40.874676555000065, -73.89300865699994)
+	map.setCenter(locationfourtyone);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 41;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationFourtytwo() {
+	var locationfourtytwo = new google.maps.LatLng(40.78594453200009, -73.97435836799991)
+	map.setCenter(locationfourtytwo);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 42;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationFourtythree() {
+	var locationfourtythree = new google.maps.LatLng(40.88813458100009, -73.91429165799991)
+	map.setCenter(locationfourtythree);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 43;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationFourtyfour() {
+	var locationfourtyfour = new google.maps.LatLng(40.69556277700008, -73.98746204699995)
+	map.setCenter(locationfourtyfour);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 44;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationFourtyfive() {
+	var locationfourtyfive = new google.maps.LatLng(40.75159251600007, -73.93681372099991)
+	map.setCenter(locationfourtyfive);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 45;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationFourtysix() {
+	var locationfourtysix = new google.maps.LatLng(40.74090997600007, -73.87426483399992)
+	map.setCenter(locationfourtysix);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 46;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationFourtyseven() {
+	var locationfourtyseven = new google.maps.LatLng(40.83786773300005, -73.86595577599991)
+	map.setCenter(locationfourtyseven);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 47;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationFourtyeight() {
+	var locationfourtyeight = new google.maps.LatLng(40.79232491000005, -73.95141589699995)
+	map.setCenter(locationfourtyeight);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 48;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationFourtynine() {
+	var locationfourtynine = new google.maps.LatLng(40.66545543700005, -73.92572252999992)
+	map.setCenter(locationfourtynine);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 49;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationFifty() {
+	var locationfifty = new google.maps.LatLng(40.74901335800007, -73.8669795269999)
+	map.setCenter(locationfifty);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 50;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationFiftyone() {
+	var locationfiftyone = new google.maps.LatLng(40.84388130800005, -73.88971005699995)
+	map.setCenter(locationfiftyone);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 51;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationFiftytwo() {
+	var locationfiftytwo = new google.maps.LatLng(40.64971002300007, -73.96649464699993)
+	map.setCenter(locationfiftytwo);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 52;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationFiftythree() {
+	var locationfiftythree = new google.maps.LatLng(40.69189660100005, -73.93140187699993)
+	map.setCenter(locationfiftythree);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 53;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationFiftyfour() {
+	var locationfiftyfour = new google.maps.LatLng(40.85156759600005, -73.9107377009999)
+	map.setCenter(locationfiftyfour);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 54;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationFiftyfive() {
+	var locationfiftyfive = new google.maps.LatLng(40.813669925000056, -73.90844170499992)
+	map.setCenter(locationfiftyfive);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 55;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationFiftysix() {
+	var locationfiftysix = new google.maps.LatLng(40.60835877300008, -74.10501298399993)
+	map.setCenter(locationfiftysix);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 56;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationFiftyseven() {
+	var locationfiftyseven = new google.maps.LatLng(40.76539952300004, -73.99257892999992)
+	map.setCenter(locationfiftyseven);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 57;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationFiftyeight() {
+	var locationfiftyeight = new google.maps.LatLng(40.73777434600004, -73.81559634099995)
+	map.setCenter(locationfiftyeight);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 58;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationFiftynine() {
+	var locationfiftynine = new google.maps.LatLng(40.75591755000005, -73.75658341199994)
+	map.setCenter(locationfiftynine);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 59;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationSixty() {
+	var locationsixty = new google.maps.LatLng(40.71731940600006, -73.98935539399992)
+	map.setCenter(locationsixty);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 60;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationSixtyone() {
+	var locationsixtyone = new google.maps.LatLng(40.597678073000054, -74.12525157499994)
+	map.setCenter(locationsixtyone);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 61;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationSixtytwo() {
+	var locationsixtytwo = new google.maps.LatLng(40.52714751500008, -74.1925779199999)
+	map.setCenter(locationsixtytwo);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 62;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationSixtythree() {
+	var locationsixtythree = new google.maps.LatLng(40.75791340500007, -73.91051185799995)
+	map.setCenter(locationsixtythree);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 63;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationSixtyfour() {
+	var locationsixtyfour = new google.maps.LatLng(40.83994344900009, -73.9112064329999)
+	map.setCenter(locationsixtyfour);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 64;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+function locationSixtyfive() {
+	var locationsixtyfive = new google.maps.LatLng(40.70179718600008, -73.79614505699993)
+	map.setCenter(locationsixtyfive);
+	map.setZoom(16);
+	document.getElementById('evaccenters').style.display="none";
+	document.getElementById('closeevac').style.display="none";
+	document.getElementById('prepareinfo').style.display="none";
+	document.getElementById('closeprepare').style.display="none";
+	document.getElementById('tinym').style.display="none";
+    document.getElementById('directionspopup').data.evaccenter = 65;
+    document.getElementById('directionspopup').style.display = "inline";
+	if(document.getElementById('scrollin').style.display="inline"){
+		document.getElementById("scrollin").style.display="none";
+		document.getElementById("scrollout").style.display="inline";
+		document.getElementById("nav_horizontal").style.left="-195px"
+	}
+}
+//End Evacuation Center Location zoom functions//
+
+//GPS Location Function//
+function sensorRequest() {
+	navigator.geolocation.getCurrentPosition(success);
+}
+function success(position) {
+	var myLat = position.coords.latitude;
+	var myLong = position.coords.longitude;
+	var locationResults = new google.maps.LatLng(myLat,myLong)
+	map.setCenter(locationResults);
+	map.setZoom(14);
+	var marker = new google.maps.Marker ({
+		position: locationResults,
+		map: map
+			
+	});
+	marker.setAnimation(google.maps.Animation.DROP);
+}
+</script>
+<!--
+
+		END Google Map Scripts
+        
+        
+-->
+
+
+
+<!--
+
+
+		START Element Open/Close Scripts
+        
+        
+-->
+<script type="text/javascript">
+function evactoggle() {
+	document.getElementById("evaccenters").style.display="inline";
+	document.getElementById("closeevac").style.display="inline";
+	document.getElementById('tinym').style.display="none";
+	if (document.getElementById("zoneboxes").style.display="inline"){
+		document.getElementById("zoneboxes").style.display="none"
+	}
+	if (document.getElementById("closezones").style.display="inline"){
+		document.getElementById("closezones").style.display="none"
+	}
+	
+	if (document.getElementById("prepareinfo").style.display="inline") {
+		document.getElementById("prepareinfo").style.display="none";
+	}
+	if (document.getElementById("closeprepare").style.display="inline"){
+		document.getElementById("closeprepare").style.display="none"
+	}
+}
+function closeevac() {
+	document.getElementById("evaccenters").style.display="none";
+	document.getElementById("closeevac").style.display="none";
+	document.getElementById('tinym').style.display="none";
+}
+function closeinfo() {
+	document.getElementById("closezones").style.display="none";
+	document.getElementById("zoneboxes").style.display="none";
+}
+function legendtoggle() {
+	document.getElementById("zoneboxes").style.display="inline";
+	document.getElementById("closezones").style.display="inline";
+	document.getElementById('tinym').style.display="none";
+	if (document.getElementById("evaccenters").style.display="inline"){
+		document.getElementById("evaccenters").style.display="none"
+	}
+	if(document.getElementById("closeevac").style.display="inline") {
+		document.getElementById("closeevac").style.display="none";
+	}
+	if (document.getElementById("prepareinfo").style.display="inline") {
+		document.getElementById("prepareinfo").style.display="none";
+	}
+	if (document.getElementById("closeprepare").style.display="inline"){
+		document.getElementById("closeprepare").style.display="none"
+	}
+}
+function infotoggle() {
+	document.getElementById("prepareinfo").style.display="inline";
+	document.getElementById("closeprepare").style.display="inline";
+	document.getElementById('tinym').style.display="none";
+	if (document.getElementById("evaccenters").style.display="inline"){
+		document.getElementById("evaccenters").style.display="none"
+	}
+	if(document.getElementById("closeevac").style.display="inline") {
+		document.getElementById("closeevac").style.display="none"
+	}
+	if(document.getElementById("zoneboxes").style.display="inline"){
+		document.getElementById("zoneboxes").style.display="none"
+		document.getElementById("closezones").style.display="none"
+	}
+}
+function closeprepare() {
+	document.getElementById("prepareinfo").style.display="none";
+	document.getElementById("closeprepare").style.display="none";
+}
+function resized() {
+	if((navigator.userAgent.match(/Android/i)) || (navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)) ||(navigator.userAgent.match(/iPad/i)) || (navigator.userAgent.match(/webOS/i))) {
+			setTimeout(function(){
+				window.scrollTo(0, 1);
+			}, 0);
+	}
+	if (window.innerWidth >= 796) {
+		document.getElementById("navigation").style.display="inline";
+		document.getElementById("navsmall").style.display="none";	
+	}
+	if (window.innerWidth < 796) {
+		document.getElementById("navigation").style.display="none";
+		document.getElementById("navsmall").style.display="inline";
+	}
+	if (window.innerWidth > 500) {
+		document.getElementById("searchbox").style.width="300px";
+	}
+	if (window.innerWidth <= 500) {
+		document.getElementById("searchbox").style.width="200px";
+	}
+	if (window.innerWidth <= 390) {
+		document.getElementById("searchbox").style.width="100px";
+	}
+}
+function tinyMenu() {
+	if (document.getElementById("tinym").style.display="none"){
+		document.getElementById("tinym").style.display="inline";
+	}
+	else {
+		document.getElementById("tinym").style.display="none";
+	}
+};
+</script>
+<!--
+
+		END Element open/close scripts
+        
+-->
+</head>
+
+<body onload="initialize()" onResize="resized()" onorientationchange="resized()">
+	<div id="map_canvas"></div>
+	<div id="topbar">
+    	<div id="search">
+        	<a href="#geolocate"><img src="images/gps.png" onClick="sensorRequest()"></a>
+            <form action="javascript:codeAddress()" onSubmit="codeAddress()" id="seachform" onFocus="activeTextbox()">
+            	<input type="textbox" id="searchbox" placeholder="Search by address" autocomplete="on">
+            </form>
+        </div>
+        <div id="navigation">
+        	<a href="#legend" onClick="legendtoggle()" class="menuitem" id="menulegend">Legend</a>
+            <a href="#evac_centers" onClick="evactoggle()" class="menuitem" id="menucenters">Evac Centers</a>
+            <a href="#prepare_info" onClick="infotoggle()" class="menuitem" id="menuprepare">Prepare Info</a>
+        </div>
+        <div id="navsmall">
+        	<a href="#menu" onClick="tinyMenu()"><img src="images/menusmall.png" alt="menu" /></a>
+        </div>
+    </div>
+    <div id="tinym">
+    	<ul>
+        	<a href="#legend" onClick="legendtoggle()"><li>Legend</li></a>
+            <a href="#evac_centers" onClick="evactoggle()"><li>Evac Centers</li></a>
+            <a href="#prepare_info" onClick="infotoggle()"><li>Prepare Info</li></a>
+        </ul>
+    </div>
+    
+    
+    
+    
+    
+    <!-- END FIRST VISIBLE ELEMENTS, BEGIN INFORMATION DIVS -->
+    
+    <!-- ABOUT US DIV, ONLY VISIBLE ON FIRST LOAD -->    
+    <!-- LEGEND DIV -->
+    
+	<div id="zoneboxes" data-scroll="y">
+    	<div id="zoneboxes_holder">
+    		<div id="zonea" class="legend">
+        		<img src="images/zonea.gif" alt="Zone_A" />
+            	<div id="zoneatext" class="infotext">
+            		<h2>Zone A</h2>
+            		<p>Residents in Zone A face the highest risk of flooding from a hurricane's storm surge. Zone A includes all Low-lying costal areas and other areas that could experience storm surge from ANY hurricane making landfall close to New York City</p>
+            	</div>
+        	</div>
+        	<div id="zoneb" class="legend">
+        		<img src="images/zoneb.gif" alt="Zone_B" />
+            	<div id="zonebtext" class="infotext">
+            		<h2>Zone B</h2>
+            		<p>Residents in Zone B may experience storm surge flooding from a Moderate (Category 2 or higher) hurricane.</p>
+            	</div>
+        	</div>
+        	<div id="zonec" class="legend">
+        		<img src="images/zonec.gif" alt="Zone_C" />
+            	<div id="zonectext" class="infotext">
+            		<h2>Zone C</h2>
+            		<p>Residents in Zone C may experience storm surge flooding from a MAJOR (Category 3 &amp; 4) hurricane making landfall just south of New York City. A major hurricane is unlikely in New York City, but not impossible.</p>
+            	</div>
+        	</div>
+        	<div id="nozone" class="legend">
+            	<div id="nozonetext" class="infotext">
+        			<h2 id="no_zone_title">No Zone</h2>
+        			<p>Residents who do not live in a hurricane evacuation zone face are unlikely to expierience a storm surge flooding from a hurricane.</p>
+            	</div>
+        	</div>
+        </div>
+    </div>
+    <div id="closezones">
+    	<a href="#close" onClick="closeinfo()"><h2>Close</h2></a>
+    </div>
+    
+    
+    
+    <!-- EVACUATION CENTERS DIV -->
+    
+    <div id="evaccenters" data-scroll="y">
+    	<div id="evaclist">
+        	<div class="locationsodd" onClick="locationOne()" data-borough="queens"><a href="#evaccenter">
+            	<h2>Aviation High School</h2>
+                <p>45-30 36 Street</p>
+                <p>Queens, NY 11101</p>
+            </a></div>
+            <div class="locationseven" onClick="locationTwo()" data-borough="manhattan"><a href="#evaccenter">
+            	<h2>Baruch College</h2>
+                <p>155 E 24th Street</p>
+                <p>New York, NY 10010</p>
+            </a></div>
+            <div class="locationsodd" onClick="locationThree()" data-borough="queens"><a href="#evaccenter">
+            	<h2>Bayside High School</h2>
+                <p>32-24 Corporal Kennedy Street</p>
+                <p>Queens, NY 11361</p>
+            </a></div>
+            <div class="locationseven" onClick="locationFour()" data-borough="queens"><a href="#evaccenter">
+            	<h2>Belmont Racetrack</h2>
+                <p>2150 Hempsted TPKE</p>
+                <p>Elmont, NY 11003</p>
+            </a></div>
+            <div class="locationsodd" onClick="locationFive()" data-borough="brooklyn"><a href="#evaccenter">
+            	<h2>Boys &amp; Girls High School</h2>
+                <p>1700 Fulton Street</p>
+                <p>Brooklyn, NY 11213</p>
+            </a></div>
+            <div class="locationseven" onClick="locationSix()" data-borough="manhattan"><a href="#evaccenter">
+            	<h2>Bread &amp; Roses</h2>
+                <p>6 Edgecombe Avenue</p>
+                <p>New York, NY 10030</p>
+            </a></div>
+            <div class="locationsodd" onClick="locationSeven()" data-borough="bronx"><a href="#evaccenter">
+            	<h2>Bronx Community College</h2>
+                <p>80 W 181st Street</p>
+                <p>Bronx, NY 10453</p>
+            </a></div>
+            <div class="locationseven" onClick="locationEight()" data-borough="brooklyn"><a href="#evaccenter">
+            	<h2>Brooklyn Tech High School</h2>
+                <p>29 Ft Green Place</p>
+                <p>Brooklyn, NY 11217</p>
+            </a></div>
+            <div class="locationsodd" onClick="locationNine()" data-borough="brooklyn"><a href="#evaccenter">
+            	<h2>Bushwick High School</h2>
+                <p>400 Irving Avenue</p>
+                <p>Brooklyn, NY 11237</p>
+            </a></div>
+            <div class="locationseven" onClick="locationTen()" data-borough="manhattan"><a href="#evaccenter">
+            	<h2>City College</h2>
+                <p>181 Convent Avenue</p>
+                <p>New York, NY 10031</p>
+            </a></div>
+            <div class="locationsodd" onClick="locationEleven()" data-borough="brooklyn"><a href="#evaccenter">
+            	<h2>Clara Barton High School</h2>
+                <p>910 Classon Avenue</p>
+                <p>Brooklyn, NY 11225</p>
+            </a></div>
+            <div class="locationseven" onClick="locationTwelve()" data-borough="staten island"><a href="#evaccenter">
+            	<h2>Curtis High School</h2>
+                <p>105 Hamilton Avenue</p>
+                <p>Staten Island, NY 10301</p>
+            </a></div>
+            <div class="locationsodd" onClick="locationThirteen()" data-borough="bronx"><a href="#evaccenter">
+            	<h2>Evander Childs High School</h2>
+                <p>800 East Gun hill Road</p>
+                <p>Bronx, NY 10467</p>
+            </a></div>
+            <div class="locationseven" onClick="locationFourteen()" data-borough="queens"><a href="#evaccenter">
+            	<h2>Flushing High School</h2>
+                <p>35-01 Union Street</p>
+                <p>Queens, NY 11354</p>
+            </a></div>
+            <div class="locationsodd" onClick="locationFifteen()" data-borough="queens"><a href="#evaccenter">
+            	<h2>Forest Hills High School</h2>
+                <p>67-01 110 Street</p>
+                <p>Queens, NY 11375</p>
+            </a></div>
+            <div class="locationseven" onClick="locationSixteen()" data-borough="brooklyn"><a href="#evaccenter">
+            	<h2>Franklin D. Roosevelt High School</h2>
+                <p>5800 20th Avenue</p>
+                <p>Brooklyn, NY 11204</p>
+            </a></div>
+            <div class="locationsodd" onClick="locationSeventeen()" data-borough="brooklyn"><a href="#evaccenter">
+            	<h2>Franklin K. Lane High School</h2>
+                <p>999 Jamaica Avenue</p>
+                <p>Brooklyn, NY 11208</p>
+            </a></div>
+            <div class="locationseven" onClick="locationEighteen()" data-borough="manhattan"><a href="#evaccenter">
+            	<h2>G. Washington High School Educ. Campus</h2>
+                <p>549 Audobon Avenue</p>
+                <p>New York, NY 10040</p>
+            </a></div>
+            <div class="locationsodd" onClick="locationNineteen()" data-borough="queens"><a href="#evaccenter">
+            	<h2>Grover Cleveland High School</h2>
+                <p>21-27 Himrod Street</p>
+                <p>Queens, NY 11385</p>
+            </a></div>
+          	<div class="locationseven" onClick="locationTwenty()" data-borough="bronx"><a href="#evaccenter">
+            	<h2>Harry S. Truman High School</h2>
+                <p>750 Baychester Avenue</p>
+                <p>Bronx, NY 10475</p>
+            </a></div>
+            <div class="locationsodd" onClick="locationTwentyone()" data-borough="queens"><a href="#evaccenter">
+            	<h2>Hillcrest High School</h2>
+                <p>160-05 Highland Avenue</p>
+                <p>Queens, NY 11432</p>
+            </a></div>
+            <div class="locationseven" onClick="locationTwentytwo()" data-borough="manhattan"><a href="#evaccenter">
+            	<h2>Hunter College</h2>
+                <p>695 Park Avenue</p>
+                <p>New York, NY 11432</p>
+            </a></div>
+            <div class="locationsodd" onClick="locationTwentythree()" data-borough="brooklyn"><a href="#evaccenter">
+            	<h2>I.S. 117</h2>
+                <p>300 Willoughby Avenue</p>
+                <p>Brooklyn, NY 11205</p>
+            </a></div>
+            <div class="locationseven" onClick="locationTwentyfour()" data-borough="manhattan"><a href="#evaccenter">
+            	<h2>I.S. 118</h2>
+                <p>154 West 93 Street</p>
+                <p>New York, NY 10025</p>
+            </a></div>
+            <div class="locationsodd" onClick="locationTwentyfive()" data-borough="brooklyn"><a href="#evaccenter">
+            	<h2>I.S. 136</h2>
+                <p>4004 4th Avenue</p>
+                <p>Brooklyn, NY 11232</p>
+            </a></div>
+            <div class="locationseven" onClick="locationTwentysix()" data-borough="bronx"><a href="#evaccenter">
+            	<h2>I.S. 145</h2>
+                <p>1000 Teller Avenue</p>
+                <p>Bronx, NY 10456</p>
+            </a></div>
+            <div class="locationsodd" onClick="locationTwentyseven()" data-borough="brooklyn"><a href="#evaccenter">
+            	<h2>I.S. 187</h2>
+                <p>1171 65 Street</p>
+                <p>Broooklyn, NY 11219</p>
+            </a></div>
+            <div class="locationseven" onClick="locationTwentyeight()" data-borough="bronx"><a href="#evaccenter">
+            	<h2>I.S. 201</h2>
+                <p>730 Bryant Avenuet</p>
+                <p>Bronx, NY 10474</p>
+            </a></div>
+            <div class="locationsodd" onClick="locationTwentynine()" data-borough="brooklyn"><a href="#evaccenter">
+            	<h2>I.S. 246</h2>
+                <p>72 Veronica Place</p>
+                <p>Brooklyn, NY 11226</p>
+            </a></div>
+            <div class="locationseven" onClick="locationThirty()" data-borough="brooklyn"><a href="#evaccenter">
+            	<h2>I.S. 271</h2>
+                <p>1137 Herkimer Street</p>
+                <p>Brooklyn, NY 11233</p>
+            </a></div>
+            <div class="locationsodd" onClick="locationThirtyone()" data-borough="brooklyn"><a href="#evaccenter">
+            	<h2>I.S. 292</h2>
+                <p>301 Vermont Street</p>
+                <p>Brooklyn, NY 11207</p>
+            </a></div>
+            <div class="locationseven" onClick="locationThirtytwo()" data-borough="brooklyn"><a href="#evaccenter">
+            	<h2>I.S. 383</h2>
+                <p>1300 Greene Avenue</p>
+                <p>Brooklyn, NY 11237</p>
+            </a></div>
+            <div class="locationsodd" onClick="locationThirtythree()" data-borough="staten island"><a href="#evaccenter">
+            	<h2>I.S. 51</h2>
+                <p>20 Houston Street</p>
+                <p>Staten Island, NY 10302</p>
+            </a></div>
+            <div class="locationseven" onClick="locationThirtyfour()" data-borough="manhattan"><a href="#evaccenter">
+            	<h2>I.S. 88</h2>
+                <p>215 West 114 Street</p>
+                <p>New York, NY 10026</p>
+            </a></div>
+            <div class="locationsodd" onClick="locationThirtyfive()" data-borough="manhattan"><a href="#evaccenter">
+            	<h2>I.S. 90</h2>
+                <p>21 Jumel Place</p>
+                <p>New York, NY 10032</p>
+            </a></div>
+            <div class="locationseven" onClick="locationThirtysix()" data-borough="bronx"><a href="#evaccenter">
+            	<h2>I.S. 98</h2>
+                <p>1619 Boston Road</p>
+                <p>Bronx, NY 10460</p>
+            </a></div>
+            <div class="locationsodd" onClick="locationThirtyseven()" data-borough="queens"><a href="#evaccenter">
+            	<h2>J.H.S. 185</h2>
+                <p>147-26 25 Drive</p>
+                <p>Queens, NY 11354</p>
+            </a></div>
+            <div class="locationseven" onClick="locationThirtyeight()" data-borough="queens"><a href="#evaccenter">
+            	<h2>John Adams High School</h2>
+                <p>101-01 Rockaway Blvd</p>
+                <p>Queens, NY 11417</p>
+            </a></div>
+            <div class="locationsodd" onClick="locationThirtynine()" data-borough="manhattan"><a href="#evaccenter">
+            	<h2>John Jay College</h2>
+                <p>445 W 59Th Street</p>
+                <p>New York, NY 10019</p>
+            </a></div>
+            <div class="locationseven" onClick="locationFourty()" data-borough="brooklyn"><a href="#evaccenter">
+            	<h2>John Jay High School</h2>
+                <p>237 7th Avenue</p>
+                <p>Brooklyn, NY 11215</p>
+            </a></div>
+            <div class="locationsodd" onClick="locationFourtyone()" data-borough="bronx"><a href="#evaccenter">
+            	<h2>Lehman College</h2>
+                <p>250 Bedford Park Blvd W</p>
+                <p>Bronx, NY 10468</p>
+            </a></div>
+            <div class="locationseven" onClick="locationFourtytwo()" data-borough="manhattan"><a href="#evaccenter">
+            	<h2>Louis D. Brandeis High School</h2>
+                <p>145 West 84th Street</p>
+                <p>New York, NY 10024</p>
+            </a></div>
+            <div class="locationsodd" onClick="locationFourtythree()" data-borough="bronx"><a href="#evaccenter">
+            	<h2>M.S./H.S. 141</h2>
+                <p>660 West 237 Street</p>
+                <p>Bronx, NY 10463</p>
+            </a></div>
+            <div class="locationseven" onClick="locationFourtyfour()" data-borough="brooklyn"><a href="#evaccenter">
+            	<h2>NYC Technical College</h2>
+                <p>300 Jay Street</p>
+                <p>Brooklyn, NY 11201</p>
+            </a></div>
+            <div class="locationsodd" onClick="locationFourtyfive()" data-borough="queens"><a href="#evaccenter">
+            	<h2>Newcomers High School (OLD LIC)</h2>
+                <p>28-01 41st Avenue</p>
+                <p>Queens, NY 11101</p>
+            </a></div>
+            <div class="locationseven" onClick="locationFourtysix()" data-borough="queens"><a href="#evaccenter">
+            	<h2>Newtown High School</h2>
+                <p>48-01 90 Street</p>
+                <p>Queens, NY 11373</p>
+            </a></div>
+            <div class="locationsodd" onClick="locationFourtyseven()" data-borough="bronx"><a href="#evaccenter">
+            	<h2>P.S. 102</h2>
+                <p>1827 Archer Street</p>
+                <p>Bronx, NY 10460</p>
+            </a></div>
+            <div class="locationseven" onClick="locationFourtyeight()" data-borough="new york"><a href="#evaccenter">
+            	<h2>P.S. 171</h2>
+                <p>19 East 103 Street</p>
+                <p>New York, NY 10029</p>
+            </a></div>
+            <div class="locationsodd" onClick="locationFourtynine()" data-borough="brooklyn"><a href="#evaccenter">
+            	<h2>P.S. 189</h2>
+                <p>1100 East New York Avenue</p>
+                <p>Brooklyn, NY 11212</p>
+            </a></div>
+            <div class="locationseven" onClick="locationFifty()" data-borough="queens"><a href="#evaccenter">
+            	<h2>P.S. 19</h2>
+                <p>98-02 Roosevelt Avenue</p>
+                <p>Queens, NY 11368</p>
+            </a></div>
+            <div class="locationsodd" onClick="locationFiftyone()" data-borough="bronx"><a href="#evaccenter">
+            	<h2>P.S. 211</h2>
+                <p>1919 Prospect Avenue</p>
+                <p>Bronx, NY 10457</p>
+            </a></div>
+            <div class="locationseven" onClick="locationFiftytwo()" data-borough="brooklyn"><a href="#evaccenter">
+            	<h2>P.S. 249</h2>
+                <p>18 Marlborough Road</p>
+                <p>Brooklyn, NY 11226</p>
+            </a></div>
+            <div class="locationsodd" onClick="locationFiftythree()" data-borough="brooklyn"><a href="#evaccenter">
+            	<h2>P.S. 26</h2>
+                <p>1010 Lafayette Avenue</p>
+                <p>Brooklyn, NY 11221</p>
+            </a></div>
+            <div class="locationseven" onClick="locationFiftyfour()" data-borough="bronx"><a href="#evaccenter">
+            	<h2>P.S. 306</h2>
+                <p>40 West Tremont Avenue</p>
+                <p>Bronx, NY 10453</p>
+            </a></div>
+           <div class="locationsodd" onClick="locationFiftyfive()" data-borough="bronx"><a href="#evaccenter">
+            	<h2>P.S. 5</h2>
+                <p>564 Jackson Avenue</p>
+                <p>Bronx, NY 10455</p>
+            </a></div>
+            <div class="locationseven" onClick="locationFiftysix()" data-borough="staten island"><a href="#evaccenter">
+            	<h2>P.S. 80 (Petrides Complex) AF-S.I.</h2>
+                <p>715 Ocean Terrace</p>
+                <p>Staten Island, NY 10301</p>
+            </a></div>
+            <div class="locationsodd" onClick="locationFiftyseven()" data-borough="manhattan"><a href="#evaccenter">
+            	<h2>Park West High School (ECF)</h2>
+                <p>525 West 50th Street</p>
+                <p>New York, NY 10019</p>
+            </a></div>
+            <div class="locationseven" onClick="locationFiftyeight()" data-borough="queens"><a href="#evaccenter">
+            	<h2>Queens College</h2>
+                <p>65-30 Kissena Blvd</p>
+                <p>Queens, NY 11367</p>
+            </a></div>
+            <div class="locationsodd" onClick="locationFiftynine()" data-borough="queens"><a href="#evaccenter">
+            	<h2>Queensborough Community College</h2>
+                <p>222-05 56th Avenue</p>
+                <p>Queens, NY 11364</p>
+            </a></div>
+            <div class="locationseven" onClick="locationSixty()" data-borough="manhattan"><a href="#evaccenter">
+            	<h2>Seward Park High School</h2>
+                <p>350 Grand Street</p>
+                <p>New York, NY 10002</p>
+            </a></div>
+            <div class="locationsodd" onClick="locationSixtyone()" data-borough="staten island"><a href="#evaccenter">
+            	<h2>Susan E. Wagner High School</h2>
+                <p>1200 Manor Road</p>
+                <p>Staten Island, NY 10314</p>
+            </a></div>
+            <div class="locationseven" onClick="locationSixtytwo()" data-borough="staten island"><a href="#evaccenter">
+            	<h2>Tottenville High School</h2>
+                <p>100 Luten Avenue</p>
+                <p>Staten Island, NY 10312</p>
+            </a></div>
+            <div class="locationsodd" onClick="locationSixtythree()" data-borough="queens"><a href="#evaccenter">
+            	<h2>William C. Bryant High School</h2>
+                <p>48-10 31 Avenue</p>
+                <p>Queens, NY 11103</p>
+            </a></div>
+            <div class="locationseven" onClick="locationSixtyfour()" data-borough="bronx"><a href="#evaccenter">
+            	<h2>William H. Taft High School</h2>
+                <p>240 East 172 Street</p>
+                <p>Bronx, NY 10457</p>
+            </a></div>
+            <div class="locationsodd" onClick="locationSixtyfive()" data-borough="queens"><a href="#evaccenter">
+            	<h2>York College</h2>
+                <p>94-20 Guy R. Brewer Blvd</p>
+                <p>Queens, NY 11451</p>
+            </a></div>
+    	</div>
+    </div>
+    <div id="closeevac">
+    	<a href="#close" onClick="closeevac()"><h2>Close</h2></a>
+    </div>
+    
+    
+    
+    <!-- PREPAREDNESS INFORMATION DIV -->
+    
+    <div id="prepareinfo">
+    <div id="prepare_iscroll">
+    	<div id="preparetitle">
+        	<h1>How to prepare</h1>
+        </div>
+        <div id="preparecontent">
+        	<div id="evaczoneinfo">
+        		<h2>If You Live in an Evacuation Zone</h2>
+            	<h3>Prepare a Disaster Plan</h3>
+            	<p>Develop a plan with your household members that outlines what to do, how to find each other, and how to communicate if a hurricane strikes New York. If you rent your home, renter’s insurance will insure the items inside your apartment. If you are a homeowner, make sure your home is properly insured — flood and wind damage are not covered in a basic homeowner’s policy.</p>
+                <h3>Know Where You Will Go</h3>
+                <p>The City strongly recommends evacuees stay with friends or family who live outside evacuation zone boundaries. For those who have no other shelter, the City will open hurricane shelters throughout the five boroughs.</p>
+                <p>To ensure efficient use of resources, the City will ask all evacuees to report to an evacuation center. Once at the evacuation center, evacuees will either be assigned to a hurricane shelter in the same facility or transported to an associated hurricane shelter by bus.</p>
+                <h3>Keep a Go Bag Ready</h3>
+                <p>Every household member should have a small <a href="javascript:gobag()">Go Bag</a> — a collection of items you may need during an evacuation packed in an easy-to-carry container such as a backpack. A Go Bag should be easily accessible if you have to leave your home in a hurry. (See Go Bag list on the right)</p>
+                <h3>Assemble an Emergency Supply Kit</h3>
+                <p>You may be instructed to shelter in place (stay at home) during a hurricane. Keep enough supplies in your home to survive for at least three days. (See Supply list on the right)</p>
+            </div>
+            <div id="nozoneinfo">
+            	<h2>If You Do Not Live in an Evacuation Zone</h2>
+                <h3>Assemble an Emergency Supply Kit</h3>
+                <p>All areas of the city could face hurricane-related hazards such as high winds, flooding, tornadoes, and loss of utilities. You may be instructed to shelter in place (stay at home) for several days until the hurricane passes. (See Supply list on the right)</p>
+            </div>
+            <div id="highriseinfo">
+            	<h2>If You Live in a High Rise Apartment Building</h2>
+                <p>Residents of high-rise apartment buildings may face special risks from hurricanes even if they live outside evacuation zone boundaries.</p>
+                <p>If you live in a high-rise building outside an evacuation zone, be prepared to take shelter on or below the 10th floor.</p>
+                <p>If you live in a high-rise building located in an evacuation zone, heed evacuation orders.</p>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="closeprepare">
+    	<a href="#close" onClick="closeprepare()"><h2>Close</h2></a>
+    </div>
+</body>
+</html>
