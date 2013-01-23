@@ -1,7 +1,7 @@
 var geocoder;
 var map;
 var scrollOne, scrollTwo, scrollThree, scrollFour;
-window.onload = function() {
+function initialize() {
 	
 	//Mobile Device Optimizations//
 	setTimeout(function() {
@@ -758,4 +758,13 @@ function highriseImgRotate(){
     else {
         $('#highrise_arrow').rotate(0, 'abs');
     }
+}
+window.onload = function(){
+	initialize();
+}
+window.onresize = function(){
+	resized();
+}
+window.onorientationchange = function(){
+	resized();
 }

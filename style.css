@@ -410,8 +410,8 @@ a {
 @media screen and (max-width:520px) {
     .section {
         position:fixed;
-        top:10%;
-        height:90%;
+        top:0;
+        height:100%;
         right:0px;
         margin:0;
         width:100%;
