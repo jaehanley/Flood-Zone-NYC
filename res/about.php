@@ -1,0 +1,8 @@
+<div>
+	<h1>Welcome to Flood Zone NYC</h1>
+	<p>Flood Zone NYC was born out of a frustration with the official NYC hurricane evacuation zone tool. I found that it took too many steps to find the most important information (if you were in a flood zone), and the information on what to do afterwards was a bit disjointed</p>
+	<p>The first changes to be made to the map was to reassign the colors used by OEM. Zone A is now red, where as before it was orange. Zone B is now orange, where before it was yellow. Zone C is now yellow where as before it was green. The use of green was particularly troublesome, as it became easy for viewers in safe zones to become concerned due to the appearance of parks when the flood zones were applied to online maps like Google Maps or Bing.</p>
+	<p>Flood Zone NYC is available for Android, Chrome, and the Mozilla App Store, and is pinnable to the homescreen on iOS devices like the iPhone and iPad as an HTML5 app. I hope to provide this experience to as many platforms as possible, and at the moment it should all of the up to date desktop browsers, as well as up to date webkit based mobile browsers, such as Android, iOS, WebOS and Playbook browsers.</p>
+	<p>Lastly, if you wish to get in contact, be free to send an e-mail to <a href="mailto:contact@darrellhanley.com">contact@darrellhanley.com</a>  or visit my official website, <a href="http://www.darrellhanley.com">www.darrellhanley.com</a></p>
+</div>
+<button>Close</button>

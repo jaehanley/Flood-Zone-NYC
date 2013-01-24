@@ -2,6 +2,8 @@ var geocoder;
 var map;
 var scrollOne, scrollTwo, scrollThree, scrollFour;
 function initialize() {
+
+	console.log("Wanted to view under the hood? Checkout the source over at GitHub: https://github.com/darrellhanley/Flood-Zone-NYC\nAnd hey, maybe check out my portfolio while you're at it: http://www.darrellhanley.com");
 	
 	//Mobile Device Optimizations//
 	setTimeout(function() {
@@ -105,39 +107,6 @@ function initialize() {
 	locations.setMap(map);
 	map.setOptions({styles: styleArray});
 	
-	
-	
-	var canvas = document.getElementById("geocodebutton");
-    var ctx = canvas.getContext("2d");
-    draw(ctx);
-	//Popup DIV size properties//
-	if (window.innerWidth >= 796) {
-		document.getElementById("navigation").style.display="inline";
-		document.getElementById("navsmall").style.display="none";
-		
-		//resizers//
-		//document.getElementById("closeevac").style.width="542px";
-		//document.getElementById("closeevac").style.left="50%";
-		//document.getElementById("closeevac").style.marginLeft="-271px";
-		//document.getElementById("evaclist").getAttribute(ul).style.width="542px";
-		//document.getElementById("evaclist").getAttribute(ul).style.left="50%";
-		//document.getElementById("evaclist").getAttribute(ul).style.marginLeft="-271px";
-		
-	}
-	if (window.innerWidth < 796) {
-		document.getElementById("navigation").style.display="none";
-		document.getElementById("navsmall").style.display="inline";
-	}
-	if (window.innerWidth > 500) {
-		document.getElementById("searchbox").style.width="300px";
-	}
-	if (window.innerWidth <= 500) {
-		document.getElementById("searchbox").style.width="200px";
-	}
-	if (window.innerWidth <= 390) {
-		document.getElementById("searchbox").style.width="100px";
-	}
-	
     var aboutscroll;
 	var ua = navigator.userAgent;
 	if (ua.indexOf("Android") >= 0 ) {
@@ -148,55 +117,6 @@ function initialize() {
             }, 100);
 		}
 	}
-}
-function draw(ctx) {
-    // layer1/Group
-    ctx.save();
-    // layer1/Group/Compound Path
-    ctx.save();
-    ctx.beginPath();
-    // layer1/Group/Compound Path/Path
-    ctx.moveTo(59.9, 27.5);
-    ctx.bezierCurveTo(58.7, 12.9, 47.1, 1.3, 32.5, 0.1);
-    ctx.lineTo(32.5, 0.0);
-    ctx.lineTo(27.5, 0.0);
-    ctx.lineTo(27.5, 0.1);
-    ctx.bezierCurveTo(12.9, 1.3, 1.3, 12.9, 0.1, 27.5);
-    ctx.lineTo(0.0, 27.5);
-    ctx.lineTo(0.0, 32.5);
-    ctx.lineTo(0.1, 32.5);
-    ctx.bezierCurveTo(1.3, 47.1, 12.9, 58.7, 27.5, 59.9);
-    ctx.lineTo(27.5, 60.0);
-    ctx.lineTo(32.5, 60.0);
-    ctx.lineTo(32.5, 59.9);
-    ctx.bezierCurveTo(47.1, 58.7, 58.7, 47.1, 59.9, 32.5);
-    ctx.lineTo(60.0, 32.5);
-    ctx.lineTo(60.0, 27.5);
-    ctx.lineTo(59.9, 27.5);
-    ctx.closePath();
-    // layer1/Group/Compound Path/Path
-    ctx.moveTo(32.5, 54.9);
-    ctx.lineTo(32.5, 42.0);
-    ctx.lineTo(27.5, 42.0);
-    ctx.lineTo(27.5, 54.9);
-    ctx.bezierCurveTo(15.7, 53.7, 6.3, 44.3, 5.1, 32.5);
-    ctx.lineTo(18.0, 32.5);
-    ctx.lineTo(18.0, 27.5);
-    ctx.lineTo(5.1, 27.5);
-    ctx.bezierCurveTo(6.3, 15.7, 15.7, 6.3, 27.5, 5.1);
-    ctx.lineTo(27.5, 18.0);
-    ctx.lineTo(32.5, 18.0);
-    ctx.lineTo(32.5, 5.1);
-    ctx.bezierCurveTo(44.3, 6.3, 53.7, 15.7, 54.9, 27.5);
-    ctx.lineTo(42.0, 27.5);
-    ctx.lineTo(42.0, 32.5);
-    ctx.lineTo(54.9, 32.5);
-    ctx.bezierCurveTo(53.7, 44.3, 44.3, 53.7, 32.5, 54.9);
-    ctx.closePath();
-    ctx.fillStyle = "rgb(255, 255, 255)";
-    ctx.fill();
-    ctx.restore();
-    ctx.restore();
 }
 function codeAddress() {
 	var address = document.getElementById("searchbox").value;
@@ -636,135 +556,88 @@ function success(position) {
     $('.section').fadeOut(400);
 }
 function error (){
-	if ((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)) || (navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/Android/i)) || (navigator.userAgent.match(/Windows Phone/i)) || (navigator.userAgent.match(/WebOS/i)) || (navigator.userAgent.match(/blackberry.*/))){
-		alert("Couldn't find your current position. Make sure location detection is enabled")
+	if ((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)) || (navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/Android/i)) || (navigator.userAgent.match(/Windows Phone/i)) || (navigator.userAgent.match(/WebOS/i)) || (navigator.userAgent.match(/blackberry/i))){
+		alert("Couldn't find your current position. Make sure location detection is enabled");
 	}
 	else {
-		alert("Your browser does not support Geolocation. Please try updating your browser or use an alternative such as Mozilla Firefox or Google Chrome")
+		alert("Your browser does not support Geolocation. Please try updating your browser or use an alternative such as Mozilla Firefox or Google Chrome");
 	}
 }
-    
+  
 // UI TOGGLE FUNCTIONS
-function closeSection() {
-	$('.section').fadeOut(400);
-}
-function evactoggle() {
-	$('.section').fadeOut(400);
-	$('#evaccenters').fadeIn(400);
-    if (window.innerWidth < 796) {
-        $('#tinym').slideToggle(200);
-    }
-}
-function legendtoggle() {
-	$('.section').fadeOut(400);
-	$('#legend').fadeIn(400);
-    if (window.innerWidth < 796) {
-        $('#tinym').slideToggle(200);
-    }
-}
-function infotoggle() {
-	$('.section').fadeOut(400);
-	$('#prepare').fadeIn(400);
-    if (window.innerWidth < 796) {
-        $('#tinym').slideToggle(200);
-    }
-}
-function abouttoggle() {
-	$('.section').fadeOut(400);
-	$('#aboutus').fadeIn(400);
-    if (window.innerWidth < 796) {
-        $('#tinym').slideToggle(200);
-    }
-}
-function resized() {
-	if((navigator.userAgent.match(/Android/i)) || (navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)) ||(navigator.userAgent.match(/iPad/i)) || (navigator.userAgent.match(/webOS/i))) {
-			setTimeout(function(){
-				window.scrollTo(0, 1);
-			}, 0);
-	}
-	if (window.innerWidth >= 796) {
-		document.getElementById("navigation").style.display="inline";
-		document.getElementById("navsmall").style.display="none";
-        document.getElementById("tinym").style.display="none"
-	}
-	if (window.innerWidth < 796) {
-		document.getElementById("navigation").style.display="none";
-		document.getElementById("navsmall").style.display="inline";
-	}
-	if (window.innerWidth > 500) {
-		document.getElementById("searchbox").style.width="300px";
-	}
-	if (window.innerWidth <= 500) {
-		document.getElementById("searchbox").style.width="200px";
-	}
-	if (window.innerWidth <= 390) {
-		document.getElementById("searchbox").style.width="100px";
-	}
-    if (ua.indexOf("Android") >= 0 ) {
-		var androidVersion = parseFloat(ua.slice(ua.indexOf("Android")+8));
-		if (androidversion < 3.0) {
-			if ($('#aboutus').is(':visible')){
-                
-            }
-            else if ($('#legend').is(':visible')) {
-                
-            }
-            else if ($('#evaccenters').is(':visible')) {
-                
-            }
-            else if ($('#prepare').is(':visible')){
-                
-            }
-		}
-	}
-}
-function tinyMenu() {
-	$('#tinym').slideToggle(200);
-};
+function uiConstants(){
+	$('.menu > a').on('click',function(){
+		if($(this).hasClass('about-toggle')){
+			// toggle about
+			if($('.about').attr('data-shown') == 'true'){
+				// Do Nothing
+			}
+			else {
+				if($('.legend').attr('data-shown') == 'true'){
+					$('.legend').attr('data-shown',false).delay(400).hide(0);
+					$('.about').delay(400).show(0).queue(function(){$(this).attr('data-shown',true).dequeue();});
+				}
+				else if($('.evac').attr('data-shown') == 'true'){
+					$('.evac').attr('data-shown',false).delay(400).hide(0);
+					$('.about').delay(400).show(0).queue(function(){$(this).attr('data-shown',true).dequeue();});
+				}
+				else if($('.prepare').attr('data-shown') == 'true'){
+					$('.prepare').attr('data-shown',false).delay(400).hide(0);
+					$('.about').delay(400).show(0).queue(function(){$(this).attr('data-shown',true).dequeue();});
+				}
+				else {
+					$('.about').show(0).queue(function(){$(this).attr('data-shown',true).dequeue();});
+				}
 
-//FUNCTIONS RELATING TO PREPARE INFO
-function toggleInZone() {
-	$('#inzone_text').slideToggle(400, inzoneImgRotate);
+			}
+		}
+		else if($(this).hasClass('legend-toggle')){
+			// toggle legend
+			if($('.legend').attr('data-shown') == 'true'){
+				// Do Nothing
+			}
+			else {
+				if($('.about').attr('data-shown') == 'true'){
+					$('.about').attr('data-shown',false).delay(400).hide(0);
+					$('.legend').delay(400).show(0).queue(function(){$(this).attr('data-shown',true).dequeue();});
+				}
+				if($('.evac').attr('data-shown') == 'true'){
+					$('.evac').attr('data-shown',false).delay(400).hide(0);
+					$('.legend').delay(400).show(0).queue(function(){$(this).attr('data-shown',true).dequeue();});
+				}
+				if($('.prepare').attr('data-shown') == 'true'){
+					$('.prepare').attr('data-shown',false).delay(400).hide(0);
+					$('.legend').delay(400).show(0).queue(function(){$(this).attr('data-shown',true).dequeue();});
+				}
+				else {
+					$('.legend').show(0).queue(function(){$(this).attr('data-shown',true).dequeue();});
+				}
+			}
+		}
+		else if($(this).hasClass('evac-toggle')){
+			// toggle evac
+		}
+		else if($(this).hasClass('prepare-toggle')){
+			// toggle prepare
+		}
+	});
+	$('.info > button').on('click',function(){
+		if($(this).parent().hasClass('about')){
+			$('.about').attr('data-shown',false).delay(400).hide(0);
+		}
+		else if($(this).parent().hasClass('legend')){
+			$('.legend').attr('data-shown',false).delay(400).hide(0);
+		}
+		else if($(this).parent().hasClass('evac')){
+			$('.evac').attr('data-shown',false).delay(400).hide(0);
+		}
+		else if($(this).parent().hasClass('prepare')){
+			$('.prepare').attr('data-shown',false).delay(400).hide(0);
+		}
+	});
 }
-function toggleOutZone() {
-	$('#outzone_text').slideToggle(400, outzoneImgRotate);
-}
-function toggleHighRise() {
-	$('#highrise_text').slideToggle(400, highriseImgRotate);
-}
-function inzoneImgRotate(){
-    if ($('#inzone_text').is(':visible')) {
-        $('#inzone_arrow').rotate(180);
-    }
-    else {
-        $('#inzone_arrow').rotate(0, 'abs');
-        
-    }
-}
-function outzoneImgRotate(){
-    if ($('#outzone_text').is(':visible')) {
-        $('#outzone_arrow').rotate(180);
-        
-    }
-    else {
-        $('#outzone_arrow').rotate(0, 'abs');
-    }
-        
-}
-function highriseImgRotate(){
-    if($('#highrise_text').is(':visible')) {
-        $('#highrise_arrow').rotate(180);
-    }
-    else {
-        $('#highrise_arrow').rotate(0, 'abs');
-    }
-}
+
 window.onload = function(){
 	initialize();
-}
-window.onresize = function(){
-	resized();
-}
-window.onorientationchange = function(){
-	resized();
+	uiConstants();
 }
