@@ -54,6 +54,9 @@ body {
 	width:100%;
 	height:100%;
 }
+input[type="button"] {
+	cursor:pointer;
+}
 /* Header styles */
 header {
 	position:fixed;
@@ -82,11 +85,11 @@ header > nav:first-of-type > * {
 }
 header > nav:first-of-type > button {
 	height:26px;
+	padding-left:2px;
+	padding-right:2px;
 	border:none;
 	outline:none;
 	-webkit-appearance:none;
-	padding-left:8px;
-	padding-right:8px;
 	background-color:<?php echo($brandRed); ?>;
 	color:#ffffff;
 }
@@ -105,6 +108,7 @@ header > nav:first-of-type > form > input:first-of-type {
 	margin-right:0;
 	width:400px;
 	height:26px;
+	border-radius:0;
 }
 header > nav:first-of-type > form > input:last-of-type {
 	margin-left:0;
@@ -113,11 +117,11 @@ header > nav:first-of-type > form > input:last-of-type {
 	color:#ffffff;
 	background-color:<?php echo($brandRed); ?>;
 }
-header > nav:last-of-type > a {
+header > nav:last-of-type > div > a {
 	margin:0 10px;
 	cursor:pointer;
 }
-header > nav:last-of-type > a:last-of-type {
+header > nav:last-of-type > div > a:last-of-type {
 	margin-right:0;
 }
 /* section - universal */
@@ -128,16 +132,11 @@ body > section {
 	top:50px;
 	right:20px;
 	height:80%;
-	<?php echo calc('height','100% - 100px'); echo transition('all .4s'); echo borderRadiusAll('4px'); echo boxShadow('0 8px 6px -6px rgba(0,0,0,.8)'); ?>
-}
-body > section[data-shown="true"]{
-	opacity:1;
-}
-body > section[data-shown="false"]{
-	opacity:0;
-}
-body > section:nth-of-type(2), body > section:nth-of-type(3), body > section:nth-of-type(4), body > section:not(:first-of-type) {
+	<?php echo calc('height','100% - 100px'); echo borderRadiusAll('4px'); echo boxShadow('0 8px 6px -6px rgba(0,0,0,.8)'); ?>
 	display:none;
+}
+body > section:first-of-type {
+	display:block;
 }
 body > section > div {
 	position:absolute;
@@ -146,13 +145,23 @@ body > section > div {
 	width:100%;
 	height:100%;
 	overflow:scroll;
+	-webkit-overflow-scrolling:touch;
+}
+body > section > div::-webkit-scrollbar {
+	width:4px;
+}
+body > section > div::-webkit-scrollbar-track-piece {
+	background-color:#ffffff;
+}
+body > section > div::-webkit-scrollbar-thumb {
+	background-color:<?php echo($brandRed); ?>;
 }
 body > section > div > * {
 	padding-left:20px;
 	padding-right:20px;
 }
-body > section > div:last-child {
-	padding-bottom:50px;
+body > section > div > *:last-child {
+	padding-bottom:30px;
 }
 body > section > button {
 	position:absolute;
@@ -167,4 +176,89 @@ body > section > button {
 	padding:10px 0;
 	margin:0;
 	<?php echo borderRadiusBottomLeft('4px'); echo borderRadiusBottomRight('4px'); ?>
+}
+body > section h1 {
+	font-size:1.5em;
+}
+body > section h2 {
+	font-size:1.2em;
+}
+.evac > div > section {
+	border-bottom:solid thin #313131;
+	padding-top:1em;
+	padding-bottom:1em;
+	cursor:pointer;
+}
+.evac > div > section > h2 {
+	margin:0;
+}
+.evac > div > section > span {
+	display:block;
+}
+@media screen and (max-width:880px) {
+	header > nav:first-of-type > form > input:first-of-type {
+		width:300px;
+	}
+}
+@media screen and (max-width:760px){
+	header > nav:first-of-type > form > input:first-of-type {
+		width:200px;
+	}
+}
+@media screen and (max-width:660px){
+	header > nav:first-of-type > form > input:first-of-type {
+		width:200px;
+	}
+	header > nav:first-of-type {
+		margin-right:20px;
+		max-width:100%;
+		min-width:0;
+		width:auto;
+	}
+	header > nav:last-of-type, header > nav:last-of-type[data-hidden="false"] {
+		position:fixed;
+		bottom:0;
+		left:0;
+		width:100%;
+		padding:10px 0;
+		background-color:rgba(0,0,0,.8);
+		<?php echo transition('all .4s'); ?>
+	}
+	header > nav:last-of-type[data-hidden="true"]{
+		bottom:-40px;
+	}
+	header > nav:last-of-type:after {
+		width:50px;
+		height:20px;
+		background-color:rgba(0,0,0,.8);
+		position:absolute;
+		top:-20px;
+		left:50%;
+		margin-left:-25px;
+		content:"";
+		<?php echo borderRadiusTopLeft('4px'); echo borderRadiusTopRight('4px'); ?>
+	}
+	header > nav:last-of-type > div {
+		margin:0 auto;
+		width:300px;
+	}
+	header > nav:last-of-type > div > a {
+		display:block;
+		float:left;
+		width:25%;
+		text-align:center;
+		margin-left:0;
+		margin-right:0;
+	}
+	.info {
+		top:0;
+		left:0;
+		width:100%;
+		height:100%;
+	}
+}
+@media screen and (width:320px){
+	header > nav:first-of-type > form > input:first-of-type {
+		width:197px;
+	}
 }

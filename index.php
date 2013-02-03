@@ -1,3 +1,4 @@
+<?php include('res/data.php'); ?>
 <!DOCTYPE html itemscope itemtype="http://schema.org/Map">
 <html>
 <head>
