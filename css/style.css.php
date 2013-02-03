@@ -146,6 +146,7 @@ body > section > div {
 	height:100%;
 	overflow:scroll;
 	-webkit-overflow-scrolling:touch;
+	<?php echo borderRadiusAll('4px'); ?>
 }
 body > section > div::-webkit-scrollbar {
 	width:4px;
@@ -183,6 +184,19 @@ body > section h1 {
 body > section h2 {
 	font-size:1.2em;
 }
+.zone {
+	margin:0;
+	float:left;
+}
+.a {
+	background-color:#aa2c1f;
+}
+.b {
+	background-color:#dc9427;
+}
+.c {
+	background-color:#efef3a;
+}
 .evac > div > section {
 	border-bottom:solid thin #313131;
 	padding-top:1em;
@@ -194,6 +208,9 @@ body > section h2 {
 }
 .evac > div > section > span {
 	display:block;
+}
+.prepare > div > section {
+	border-bottom:solid thin #313131;
 }
 @media screen and (max-width:880px) {
 	header > nav:first-of-type > form > input:first-of-type {

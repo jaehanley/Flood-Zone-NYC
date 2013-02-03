@@ -26,6 +26,11 @@
 <link rel="apple-touch-icon-precomposed" sizes="72x72" href="ios/ipad-precomposed.png">
 <link rel="apple-touch-icon-precomposed" sizes="144x144" href="ios/ipad-retina-precomposed.png" />
 
+<!-- HTML5 BACKWARDS COMPATIBILITY -->
+<!--[if lt IE 9]>
+<script src="js/html5shiv.js"></script>
+<![endif]-->
+
 <script type="text/javascript">
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-29051833-1']);
