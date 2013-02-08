@@ -1,4 +1,6 @@
-<?php include('res/data.php');
+<?php
+ob_start("ob_gzhandler");
+include('res/data.php');
 $access = 'my_value';?>
 <!DOCTYPE html itemscope itemtype="http://schema.org/Map">
 <html>

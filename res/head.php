@@ -26,6 +26,19 @@
 <link rel="apple-touch-icon-precomposed" sizes="72x72" href="ios/ipad-precomposed.png">
 <link rel="apple-touch-icon-precomposed" sizes="144x144" href="ios/ipad-retina-precomposed.png" />
 
+<!--IOS LAUNCH SCREENS -->
+	<!-- Old iPhone, non retina -->
+<link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 480px) and (-webkit-device-pixel-ratio: 1)" href="ios/splash-iphone-non-retina.png" />
+	<!-- Old iPhone, retina -->
+<link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 480px) and (-webkit-device-pixel-ratio: 2)" href="ios/splash-iphone-retina.png" />
+	<!-- New iPhone 16x9 -->
+<link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" href="ios/splash-16-9-iphone.png" />
+	<!-- iPad Non-Retina -->
+<link rel="apple-touch-startup-image" media="(min-device-width: 768px) and (orientation: portrait)" href="ios/splash-portrait.png" />
+<link rel="apple-touch-startup-image" media="(min-device-width: 768px) and (orientation: landscape)" href="ios/splash-landscape.png" />
+	<!-- iPad Retina -->
+<link rel="apple-touch-startup-image" media="(min-device-width: 768px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 2)" href="ios/splash-retina-portrait.png" />
+<link rel="apple-touch-startup-image" media="(min-device-width: 768px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 2)" href="ios/splash-retina-landscape.png" />
 <!-- HTML5 BACKWARDS COMPATIBILITY -->
 <!--[if lt IE 9]>
 <script src="js/html5shiv.js"></script>
