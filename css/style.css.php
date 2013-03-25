@@ -279,3 +279,6 @@ body > section h2 {
 		width:197px;
 	}
 }
+@-ms-viewport {
+	width:device-width;
+}
