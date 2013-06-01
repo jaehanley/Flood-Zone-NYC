@@ -47,6 +47,13 @@
 body {
 	font-family:'Lato', HelveticaNeue, "Helvetica Neue", Helvetica, "Lucida Grande", LucidaGrande, Verdana, Roboto, "Droid Sans", "segoe ui", Arial, sans-serif;
 }
+* {
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	-ms-box-sizing:border-box;
+	-o-box-sizing:border-box;
+	box-sizing:border-box;
+}
 #map_canvas {
 	position:absolute;
 	top:0;
@@ -63,9 +70,7 @@ header {
 	top:0;
 	left:0;
 	width:100%;
-	background-color:rgba(0,0,0,.8);
 	padding:10px 0;
-	border-bottom:solid 2px <?php echo($brandRed); ?>;
 }
 header a {
 	color:#ffffff;
@@ -85,8 +90,7 @@ header > nav:first-of-type > * {
 }
 header > nav:first-of-type > button {
 	height:26px;
-	padding-left:2px;
-	padding-right:2px;
+	padding:20px;
 	border:none;
 	outline:none;
 	-webkit-appearance:none;

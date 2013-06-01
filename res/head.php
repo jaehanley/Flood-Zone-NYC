@@ -11,7 +11,7 @@
 <title>Flood Zone NYC</title>
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-<link href="css/style.css.php" rel="stylesheet" type="text/css">
+<link href="css/style.css" rel="stylesheet" type="text/css">
 <meta name="description" content="Map of New York City Flood Zones as well as information about evacuation centers and how to prepare for a storm" />
 <meta itemprop="name" content="Flood Zone NYC">
 <meta itemprop="description" content="Map of New York City Flood Zones as well as information about evacuation centers and how to prepare for a storm">

@@ -1,6 +1,6 @@
 <div>
 	<?php
-		$evacCenters = mysql_query('SELECT * FROM evac_centers');
+		$evacCenters = mysql_query("SELECT * FROM evac_centers ORDER BY 'Building Name' DESC ");
 		while($evacRow = mysql_fetch_array($evacCenters)){
 			echo('<section class="evacLocation" data-geo="'.$evacRow['Geolocation'].'" data-borough="'.$evacRow['Facilitating Borough'].'">');
 			echo('<h2>'.$evacRow['Building Name'].'</h2>');

@@ -137,6 +137,7 @@ function codeAddress(event) {
 	searchInput.value = '';
     searchInput.blur();
     $('.info').attr('data-shown',false).delay(400).hide(0);
+    $('.menu li').removeClass('active');
 }
 
 // Evacuation Center Zoom in function, respons to activation via evacuation center list in absolutely placed div centered
@@ -171,6 +172,7 @@ function success(position) {
 	marker.setAnimation(google.maps.Animation.DROP);
     console.log('Geolocation sucessful');
     $('.info').attr('data-shown',false).delay(400).hide(0);
+    $('.menu li').removeClass('active');
 }
 function error() {
 	console.log('Geolocation unsuccessful');
@@ -184,6 +186,8 @@ function error() {
   
 // UI TOGGLE FUNCTIONS
 function navToggle() {
+	$('.menu li').removeClass('active');
+	$(this).addClass('active');
 	if($(this).hasClass('about-toggle')){
 		// toggle about
 		if($('.about').attr('data-shown') == 'true'){
@@ -291,36 +295,7 @@ function hideInfo() {
 	else if($(this).parent().hasClass('prepare')){
 		$('.prepare').attr('data-shown',false).fadeOut(400);
 	}
-}
-function menuSwipeStart(event){
-	event.preventDefault();
-	var touch = event.originalEvent.touches[0];
-	var x = touch.pageX;
-	var y = touch.pageY;
-	$(this).attr({'data-x': x, 'data-y': y});
-}
-function menuSwipeMid(event){
-	event.preventDefault();
-	var touch = event.originalEvent.touches[0];
-	var x = touch.pageX;
-	var y = touch.pageY;
-	var startX = $(this).attr('data-x');
-	var startY = $(this).attr('data-y');
-	if((x - startX <= 10)&&(x - startX >= -10)){
-		if(y - startY < -20){
-			if($(this).attr('data-hidden') == 'true'){
-				$(this).attr('data-hidden',false);
-			}
-		}
-		else if (y - startY > 20){
-			if($(this).attr('data-hidden') !== 'true'){
-				$(this).attr('data-hidden',true);
-			}
-		}
-	}
-}
-function menuSwipeEnd(event){
-	event.preventDefault();
+	$('.menu li').removeClass('active');
 }
 function goToLocation(){
 	var location = $(this).attr('data-geo');
@@ -330,16 +305,14 @@ function goToLocation(){
 	map.panTo(geoLocation);
 	map.setZoom(16);
 	$('.evac').attr('data-shown',false).fadeOut(400);
+	$('.menu li').removeClass('active');
 }
 window.onload = function(){
 	$('.location > button').on('click',sensorRequest);
 	$('.location > form').on('submit', codeAddress);
 	$('.location input[type="button"]').on('click',codeAddress);
-	$('.menu a').on('click touchstart', navToggle);
+	$('.menu li').on('click touchstart', navToggle);
 	$('.info > button').on('click',hideInfo);
-	$('header > nav:last-of-type').on('touchstart',menuSwipeStart);
-	$('header > nav:last-of-type').on('touchmove',menuSwipeMid);
-	$('header > nav:last-of-type').on('touchend',menuSwipeEnd);
 	$('.evacLocation').on('click',goToLocation);
 	initialize();
 }
