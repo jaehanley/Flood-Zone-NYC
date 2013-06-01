@@ -155,7 +155,12 @@ function locationOne() {
 
 //GPS Location Function//
 function sensorRequest() {
-	navigator.geolocation.getCurrentPosition(success, error);
+	if(window.navigator.geolocation){
+		navigator.geolocation.getCurrentPosition(success, error);
+	}
+	else {
+		alert("Your browser does not support Geolocation. Please try updating your browser or use an alternative such as Mozilla Firefox or Google Chrome");
+	}
 }
 function success(position) {
 	var myLat = position.coords.latitude;
@@ -176,12 +181,7 @@ function success(position) {
 }
 function error() {
 	console.log('Geolocation unsuccessful');
-	if ((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)) || (navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/Android/i)) || (navigator.userAgent.match(/Windows Phone/i)) || (navigator.userAgent.match(/WebOS/i)) || (navigator.userAgent.match(/blackberry/i))){
-		alert("Couldn't find your current position. Make sure location detection is enabled");
-	}
-	else {
-		alert("Your browser does not support Geolocation. Please try updating your browser or use an alternative such as Mozilla Firefox or Google Chrome");
-	}
+	alert("Couldn't find your current position. Make sure location detection is enabled");
 }
   
 // UI TOGGLE FUNCTIONS
@@ -311,7 +311,7 @@ window.onload = function(){
 	$('.location > button').on('click',sensorRequest);
 	$('.location > form').on('submit', codeAddress);
 	$('.location input[type="button"]').on('click',codeAddress);
-	$('.menu li').on('click touchstart', navToggle);
+	$('.menu li').on('click', navToggle);
 	$('.info > button').on('click',hideInfo);
 	$('.evacLocation').on('click',goToLocation);
 	initialize();

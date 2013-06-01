@@ -9,7 +9,9 @@ $access = 'my_value';?>
 </head>
 
 <body>
-	<div id="map_canvas"></div>
+    <div class="mapcontainer">
+	   <div id="map_canvas"></div>
+    </div>
     <header>
         <?php include_once('res/header.php'); ?>
     </header>
