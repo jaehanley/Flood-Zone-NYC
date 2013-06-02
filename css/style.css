@@ -297,6 +297,13 @@ p {
 .evac.info > div, .legend.info > div, .prepare.info > div {
 	padding:0;
 }
+.evac > div > section > h4 {
+	margin:0;
+	padding:4px 20px;
+	color:#ffffff;
+	background-color:#292929;
+	font-weight:200;
+}
 .evacLocation {
 	padding:10px 20px;
 	border-bottom:solid thin #ccc;
