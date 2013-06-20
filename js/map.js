@@ -1,3 +1,5 @@
+google.maps.visualRefresh = true;
+
 var geocoder;
 var map;
 function initialize() {
@@ -67,34 +69,26 @@ function initialize() {
 		panControl: false,
   		mapTypeId: 'roadmap',
 	});
-	var zones = new google.maps.FusionTablesLayer({
-		query: {
-			select: 'geometry',
-			from: '13uEi2dynsKzdVyegQvO7QH59OOOnjxjd3Ry9BEA'
-		},
-		clickable: 0,
-		styles: [{
-			polygonOptions: {
-				fillColor: "#AA2C1F",
-				fillOpacity: 0.4
-			}
-		},{
-			where:"CAT1NNE = 'B'",
-			polygonOptions: {
-				fillColor: "#DC9427"
-			}
-		},{
-			where:"CAT1NNE = 'C'",
-			polygonOptions: {
-				fillColor: "#EFEF3A"
-			}
-		}]
-	});
 	var locations = new google.maps.FusionTablesLayer({
   		query: {
     		select: 'Geocodable address',
-    		from: '2047825'
+    		from: '18v2n3Gc4Wb2sSse5oqb7Q3vu_bKF1UN9qksmCKo'
   		},
+  		options: {
+  			styleId:2,
+  			templateId:2
+  		}
+	});
+	var zones = new google.maps.FusionTablesLayer({
+		query: {
+			select: 'geometry',
+			from: '1gGJgrTkJqNWYlNNsdAfFQ9W9r8zuOeMCWm8UhqM'
+		},
+		options:{
+			styleId:2,
+			templateId:2
+		},
+		clickable:0
 	});
 	zones.setMap(map);
 	locations.setMap(map);
