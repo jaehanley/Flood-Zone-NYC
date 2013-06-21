@@ -184,10 +184,7 @@ function navToggle() {
 	$(this).addClass('active');
 	if($(this).hasClass('about-toggle')){
 		// toggle about
-		if($('.about').attr('data-shown') == 'true'){
-			// Do Nothing
-		}
-		else {
+		if($('.about').attr('data-shown') !== 'true'){
 			if($('.legend').attr('data-shown') == 'true'){
 				$('.legend').attr('data-shown',false).fadeOut(400);
 				$('.about').attr('data-shown',true).delay(400).fadeIn(400);
@@ -208,10 +205,7 @@ function navToggle() {
 	}
 	else if($(this).hasClass('legend-toggle')){
 		// toggle legend
-		if($('.legend').attr('data-shown') == 'true'){
-			// Do Nothing
-		}
-		else {
+		if($('.legend').attr('data-shown') !== 'true'){
 			if($('.about').attr('data-shown') == 'true'){
 				$('.about').attr('data-shown',false).fadeOut(400);
 				$('.legend').attr('data-shown',true).delay(400).fadeIn(400);
@@ -231,10 +225,7 @@ function navToggle() {
 	}
 	else if($(this).hasClass('evac-toggle')){
 		// toggle evac
-		if($('.evac').attr('data-shown') == 'true'){
-			// Do Nothing
-		}
-		else {
+		if($('.evac').attr('data-shown') !== 'true'){
 			if($('.about').attr('data-shown') == 'true'){
 				$('.about').attr('data-shown',false).fadeOut(400);
 				$('.evac').attr('data-shown',true).delay(400).fadeIn(400);
@@ -254,10 +245,7 @@ function navToggle() {
 	}
 	else if($(this).hasClass('prepare-toggle')){
 		// toggle prepare
-		if($('.prepare').attr('data-shown') == 'true'){
-			// Do Nothing
-		}
-		else {
+		if($('.prepare').attr('data-shown') !== 'true'){
 			if($('.about').attr('data-shown') == 'true'){
 				$('.about').attr('data-shown',false).fadeOut(400);
 				$('.prepare').attr('data-shown',true).delay(400).fadeIn(400);
