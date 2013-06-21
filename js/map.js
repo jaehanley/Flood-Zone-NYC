@@ -309,12 +309,14 @@ window.onload = function(){
 	$('.info > button').on('click',hideInfo);
 	$('.evacLocation').on('click',goToLocation);
 	initialize();
-	if($('html').hasClass('no-csscalc')){
-		if(window.innerWidth < 660){
-			$('.location form').css('width','100%').css('width','-=40px');
-			$('.location input:first').css('width','100%').css('width','-=40px');
+	window.setTimeout(function(){
+		if($('html').hasClass('no-csscalc')){
+			if(window.innerWidth < 660){
+				$('.location form').css('width','100%').css('width','-=40px');
+				$('.location input:first').css('width','100%').css('width','-=40px');
+			}
 		}
-	}
+	},200);
 }
 window.onresize = function(){
 	if($('html').hasClass('no-csscalc')){

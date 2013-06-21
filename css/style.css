@@ -300,14 +300,23 @@ p {
 .zone {
 	padding:20px;
 }
-.zone.a {
-	background-color:#aa2c1f;
+.zone._1 {
+	background-color:#B52A2A;
 }
-.zone.b {
-	background-color:#dc9427;
+.zone._2 {
+	background-color:#C15129;
 }
-.zone.c {
-	background-color:#efef3a;
+.zone._3 {
+	background-color:#CC7928;
+}
+.zone._4 {
+	background-color:#D8A027;
+}
+.zone._5 {
+	background-color:#E3C826;
+}
+.zone._6 {
+	background-color:#EFEF25;
 }
 .zone > h2 {
 	padding-top:0;
@@ -381,5 +390,12 @@ p {
 		width:auto;
 		left:20px;
 		bottom:60px;
+	}
+	#map_canvas {
+		height:-webkit-calc(100% - 45px);
+		height:-moz-calc(100% - 45px);
+		height:-ms-calc(100% - 45px);
+		height:-o-calc(100% - 45px);
+		height:calc(100% - 45px);
 	}
 }
