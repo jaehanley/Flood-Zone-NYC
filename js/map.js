@@ -13,7 +13,7 @@ function initialize() {
 				window.scrollTo(0, 1);
 			}, 0);
 			if((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i))) {
-				if (window.screen.height==568) { // iPhone 4"
+				if (window.screen.height==568) { // iPhone 4" - pin to homescreen hack fix
 					document.querySelector("meta[name=viewport]").content="width=320.1";
 				}
 			}
@@ -56,6 +56,7 @@ function initialize() {
 			stylers: greyedOut
 		}
 	];
+	// Google Maps positioning, control options
 	var nyc = new google.maps.LatLng(40.73, -73.95);
 	geocoder = new google.maps.Geocoder();
 	map = new google.maps.Map(document.getElementById('map_canvas'), {
@@ -69,6 +70,7 @@ function initialize() {
 		panControl: false,
   		mapTypeId: 'roadmap',
 	});
+	// Evacuation Centers
 	var locations = new google.maps.FusionTablesLayer({
   		query: {
     		select: 'Geocodable address',
@@ -79,6 +81,7 @@ function initialize() {
   			templateId:2
   		}
 	});
+	// Evacuation Zones
 	var zones = new google.maps.FusionTablesLayer({
 		query: {
 			select: 'geometry',
@@ -122,11 +125,7 @@ function codeAddress(event) {
 				map: map
 			});
 			marker.setAnimation(google.maps.Animation.DROP);
-			/*infowindow.setContent("Test");
-			infowindow.open(map, marker);*/
 		}
-		// results[4].formatted_address should be able to cull borough, allowing for distance API to have culled lists, allowing directions API to function
-			// See if FusionTable can be used to pull results only for particular borough using distance api
 	});
 	searchInput.value = '';
     searchInput.blur();
@@ -140,14 +139,8 @@ function locationOne() {
 	map.setCenter(firstlocation);
 	map.setZoom(16);
 }
-/*function shelterLocation(){
-	var latlong = $(this).attr('data-lat-long');
-	var location = new google.maps.latLng+latlong;
-	map.setCenter(location);
-	map.setZoom(16);
-}*/
 
-//GPS Location Function//
+// GPS Location Function
 function sensorRequest() {
 	if(window.navigator.geolocation){
 		navigator.geolocation.getCurrentPosition(success, error);
@@ -297,14 +290,12 @@ window.onload = function(){
 	$('.info > button').on('click',hideInfo);
 	$('.evacLocation').on('click',goToLocation);
 	initialize();
-	window.setTimeout(function(){
-		if($('html').hasClass('no-csscalc')){
-			if(window.innerWidth < 660){
-				$('.location form').css('width','100%').css('width','-=40px');
-				$('.location input:first').css('width','100%').css('width','-=40px');
-			}
+	if($('html').hasClass('no-csscalc')){
+		if(window.innerWidth < 660){
+			$('.location form').css('width','100%').css('width','-=40px');
+			$('.location input:first').css('width','100%').css('width','-=40px');
 		}
-	},200);
+	}
 }
 window.onresize = function(){
 	if($('html').hasClass('no-csscalc')){
