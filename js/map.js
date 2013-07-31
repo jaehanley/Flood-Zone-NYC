@@ -287,7 +287,7 @@ function goToLocation(){
 	$('.evac').attr('data-shown',false).fadeOut(400);
 	$('.menu li').removeClass('active');
 }
-window.onload = function(){
+$(function(){
 	$('.location > button').on('click',sensorRequest);
 	$('.location > form').on('submit', codeAddress);
 	$('.location input[type="button"]').on('click',codeAddress);
@@ -301,8 +301,8 @@ window.onload = function(){
 			$('.location input:first').css('width','100%').css('width','-=40px');
 		}
 	}
-}
-window.onresize = function(){
+});
+$(window).resize(function(){
 	if($('html').hasClass('no-csscalc')){
 		if(window.innerWidth < 660){
 			$('.location form').css('width','100%').css('width','-=40px');
@@ -313,4 +313,4 @@ window.onresize = function(){
 			$('.location input:first').attr('style',null);
 		}
 	}
-}
+});
