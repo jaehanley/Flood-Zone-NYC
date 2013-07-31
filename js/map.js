@@ -93,8 +93,13 @@ function initialize() {
 		},
 		clickable:0
 	});
+	// FEMA Flood Layer
+	var fema = new google.maps.KmlLayer({
+		url: 'http://www.floodzonenyc.com/layers/doc.kml'
+	 });
 	zones.setMap(map);
 	locations.setMap(map);
+	//fema.setMap(map);
 	map.setOptions({styles: styleArray});
 	
     var aboutscroll;
