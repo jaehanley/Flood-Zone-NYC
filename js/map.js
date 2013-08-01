@@ -17,6 +17,11 @@ function initialize() {
 					document.querySelector("meta[name=viewport]").content="width=320.1";
 				}
 			}
+			if((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)) ||(navigator.userAgent.match(/iPad/i))){
+				if(window.navigator.standalone){
+					$('html').addClass('ios-app');
+				}
+			}
 		}
 	});
 	//Google Maps code//
@@ -93,13 +98,12 @@ function initialize() {
 		},
 		clickable:0
 	});
-	// FEMA Flood Layer
-	var fema = new google.maps.KmlLayer({
-		url: 'http://www.floodzonenyc.com/layers/doc.kml'
-	 });
+	// Transit Layer
+	var subways = new google.maps.TransitLayer();
+	// Set Map
 	zones.setMap(map);
 	locations.setMap(map);
-	//fema.setMap(map);
+	//subways.setMap(map);
 	map.setOptions({styles: styleArray});
 	
     var aboutscroll;
