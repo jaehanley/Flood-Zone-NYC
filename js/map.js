@@ -96,6 +96,44 @@ function initialize() {
 			styleId:2,
 			templateId:2
 		},
+		styles: [
+			{
+				where: "'Zone' = 1",
+				polygonOptions: {
+					fillColor: "#68154a"
+				}
+			},
+			{
+				where: "'Zone' = 2",
+				polygonOptions: {
+					fillColor: "#9b1530"
+				}
+			},
+			{
+				where: "'Zone' = 3",
+				polygonOptions: {
+					fillColor: "#ce1515"
+				}
+			},
+			{
+				where: "'Zone' = 4",
+				polygonOptions: {
+					fillColor: "#da5c10"
+				}
+			},
+			{
+				where: "'Zone' = 5",
+				polygonOptions: {
+					fillColor: "#e6a40b"
+				}
+			},
+			{
+				where: "'Zone' = 6",
+				polygonOptions: {
+					fillColor: "#f2eb06"
+				}
+			}
+		],
 		clickable:0
 	});
 	// Transit Layer
@@ -291,6 +329,18 @@ function goToLocation(){
 	$('.evac').attr('data-shown',false).fadeOut(400);
 	$('.menu li').removeClass('active');
 }
+function resizeForm(){
+	if($('html').hasClass('no-csscalc')){
+		if(window.innerWidth < 660){
+			$('.location form').css('width','100%').css('width','-=50px');
+			$('.location input:first').css('width','100%').css('width','-=40px');
+		}
+		else {
+			$('.location form').attr('style',null);
+			$('.location input:first').attr('style',null);
+		}
+	}
+}
 $(function(){
 	$('.location > button').on('click',sensorRequest);
 	$('.location > form').on('submit', codeAddress);
@@ -299,22 +349,8 @@ $(function(){
 	$('.info > button').on('click',hideInfo);
 	$('.evacLocation').on('click',goToLocation);
 	initialize();
-	if($('html').hasClass('no-csscalc')){
-		if(window.innerWidth < 660){
-			$('.location form').css('width','100%').css('width','-=40px');
-			$('.location input:first').css('width','100%').css('width','-=40px');
-		}
-	}
+	resizeForm();
 });
 $(window).resize(function(){
-	if($('html').hasClass('no-csscalc')){
-		if(window.innerWidth < 660){
-			$('.location form').css('width','100%').css('width','-=40px');
-			$('.location input:first').css('width','100%').css('width','-=40px');
-		}
-		else {
-			$('.location form').attr('style',null);
-			$('.location input:first').attr('style',null);
-		}
-	}
+	resizeForm();
 });
