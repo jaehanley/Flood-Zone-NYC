@@ -1,6 +1,6 @@
 // Mixins & Variables
 $HelveticaNeue:HelveticaNeue,"Helvetica Neue",Helvetica,"Lucida Grande",LucidaGrande,Verdana,Roboto,"Droid Sans","segoe ui",Arial,sans-serif;
-$zoneSwatches:(#aa1a1a,#b64319,#c26b18,#cd9417,#d9bc16,#e5e515);
+$zoneSwatches:(#68154a,#9b1530,#ce1515,#da5c10,#e6a40b,#f2eb06);
 @mixin calc($operation,$value){
 	#{$operation}:-webkit-calc(#{$value});
 	#{$operation}:-moz-calc(#{$value});
@@ -258,7 +258,7 @@ p {
 		margin:0;
 		border:none;
 		height:40px;
-		@include button-dark;
+		background-color:#313131;
 	}
 }
 .location > *, .menu, .info {
@@ -291,15 +291,29 @@ p {
 	}
 }
 .zone {
-	padding:20px;
+	padding:20px 10px;
+	border-left:solid 20px;
+	position:relative;
 	@for $i from 1 through 6 {
 		&._#{$i} {
-			background-color:nth($zoneSwatches, $i);
+			border-left-color:nth($zoneSwatches, $i);
+			&:after {
+				position:absolute;
+				bottom:0;
+				left:0;
+				right:0;
+				height:1px;
+				background-color:#ccc;
+				content:"";
+			}
 		}
+	}
+	&.none {
+		border-left-color:#fff;
 	}
 	> h2 {
 		padding-top:0;
-		margin-top:0;
+		margin:0;
 	}
 }
 .prepare {
