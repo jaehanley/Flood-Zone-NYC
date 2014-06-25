@@ -39,8 +39,8 @@ p {
   .location > button {
     position: relative;
     cursor: pointer;
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     -webkit-borer-radius: 4px;
     -moz-border-radius: 4px;
     border-radius: 4px;
@@ -66,8 +66,8 @@ p {
       filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ea0000', endColorstr='#dd0000',GradientType=0 ); }
     .location > button > span {
       position: absolute;
-      top: 5px;
-      left: 5px;
+      top: 10px;
+      left: 10px;
       margin: auto;
       display: block;
       width: 20px;
@@ -80,7 +80,7 @@ p {
     float: left;
     font-family: HelveticaNeue, "Helvetica Neue", Helvetica, "Lucida Grande", LucidaGrande, Verdana, Roboto, "Droid Sans", "segoe ui", Arial, sans-serif; }
     .location > form > input {
-      height: 30px;
+      height: 40px;
       -webkit-appearance: none;
       border: none;
       margin: 0;
@@ -125,71 +125,39 @@ p {
     list-style-type: none;
     margin: 0;
     background-color: #fff;
-    padding: 0;
-    -webkit-borer-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px; }
+    padding: 0; }
     .menu > ul > li {
       margin: 0;
       float: left;
-      padding: 8px 0;
+      height: 40px;
+      line-height: 40px;
       width: 80px;
       display: inline-block;
       text-align: center;
       font-size: .8em;
       cursor: pointer;
-      background: white;
-      background: -moz-linear-gradient(top, white 0%, #f7f7f7 100%);
-      background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, white), color-stop(100%, #f7f7f7));
-      background: -webkit-linear-gradient(top, white 0%, #f7f7f7 100%);
-      background: -o-linear-gradient(top, white 0%, #f7f7f7 100%);
-      background: -ms-linear-gradient(top, white 0%, #f7f7f7 100%);
-      background: linear-gradient(to bottom, white 0%, #f7f7f7 100%);
-      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#f7f7f7',GradientType=0 ); }
-      .menu > ul > li:first-of-type {
-        -webkit-borer-radius: 4px 0 0 4px;
-        -moz-border-radius: 4px 0 0 4px;
-        border-radius: 4px 0 0 4px; }
-      .menu > ul > li:last-of-type {
-        -webkit-borer-radius: 0 4px 4px 0;
-        -moz-border-radius: 0 4px 4px 0;
-        border-radius: 0 4px 4px 0; }
+      background-color: #fff;
+      border-bottom: solid 2px #ccc;
+      position: relative; }
+      .menu > ul > li:not(:first-of-type):after {
+        width: 1px;
+        position: absolute;
+        top: 0;
+        bottom: -2px;
+        left: 0;
+        background-color: #ccc;
+        content: ""; }
       .menu > ul > li:hover, .menu > ul > li:focus {
-        background: #7abcff;
-        background: -moz-linear-gradient(top, #7abcff 0%, #60abf8 44%, #4096ee 100%);
-        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #7abcff), color-stop(44%, #60abf8), color-stop(100%, #4096ee));
-        background: -webkit-linear-gradient(top, #7abcff 0%, #60abf8 44%, #4096ee 100%);
-        background: -o-linear-gradient(top, #7abcff 0%, #60abf8 44%, #4096ee 100%);
-        background: -ms-linear-gradient(top, #7abcff 0%, #60abf8 44%, #4096ee 100%);
-        background: linear-gradient(to bottom, #7abcff 0%, #60abf8 44%, #4096ee 100%);
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#7abcff', endColorstr='#4096ee',GradientType=0 );
-        color: #fff; }
-      .menu > ul > li:not(:first-of-type) {
-        border-left: solid thin #fff; }
-        .menu > ul > li:not(:first-of-type):hover, .menu > ul > li:not(:first-of-type):focus {
-          border-left: solid thin #89BCF0; }
-        .menu > ul > li:not(:first-of-type).active, .menu > ul > li:not(:first-of-type).active:hover {
-          border-left: solid thin #298CF0; }
-      .menu > ul > li:not(:last-of-type) {
-        border-right: solid thin #eaeaea; }
-        .menu > ul > li:not(:last-of-type):hover, .menu > ul > li:not(:last-of-type):focus {
-          border-right: solid thin #298CF0; }
-        .menu > ul > li:not(:last-of-type).active, .menu > ul > li:not(:last-of-type).active:hover {
-          border-right: solid thin #298CF0; }
+        border-bottom-color: #333; }
       .menu > ul > li.active {
-        color: #fff;
-        background: #58A4F0;
-        border: none; }
-        .menu > ul > li.active:hover {
-          color: #fff;
-          background: #58A4F0; }
+        border-bottom-color: #7abcff; }
 
 .info {
   position: fixed;
   right: 20px;
   width: 320px;
   bottom: 20px;
-  top: 50px;
+  top: 60px;
   background-color: #fff;
   padding: 20px;
   overflow: hidden;
@@ -217,22 +185,7 @@ p {
     margin: 0;
     border: none;
     height: 40px;
-    background: #313131;
-    /* Old browsers */
-    background: -moz-linear-gradient(top, #313131 0%, #232323 100%);
-    /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #313131), color-stop(100%, #232323));
-    /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top, #313131 0%, #232323 100%);
-    /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top, #313131 0%, #232323 100%);
-    /* Opera 11.10+ */
-    background: -ms-linear-gradient(top, #313131 0%, #232323 100%);
-    /* IE10+ */
-    background: linear-gradient(to bottom, #313131 0%, #232323 100%);
-    /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#313131', endColorstr='#232323',GradientType=0 );
-    /* IE6-9 */ }
+    background-color: #313131; }
 
 .location > *, .menu, .info {
   -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
@@ -260,22 +213,74 @@ p {
     display: block; }
 
 .zone {
-  padding: 20px; }
+  padding: 20px 10px;
+  border-left: solid 20px;
+  position: relative; }
   .zone._1 {
-    background-color: #aa1a1a; }
+    border-left-color: #68154a; }
+    .zone._1:after {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background-color: #ccc;
+      content: ""; }
   .zone._2 {
-    background-color: #b64319; }
+    border-left-color: #9b1530; }
+    .zone._2:after {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background-color: #ccc;
+      content: ""; }
   .zone._3 {
-    background-color: #c26b18; }
+    border-left-color: #ce1515; }
+    .zone._3:after {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background-color: #ccc;
+      content: ""; }
   .zone._4 {
-    background-color: #cd9417; }
+    border-left-color: #da5c10; }
+    .zone._4:after {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background-color: #ccc;
+      content: ""; }
   .zone._5 {
-    background-color: #d9bc16; }
+    border-left-color: #e6a40b; }
+    .zone._5:after {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background-color: #ccc;
+      content: ""; }
   .zone._6 {
-    background-color: #e5e515; }
+    border-left-color: #f2eb06; }
+    .zone._6:after {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background-color: #ccc;
+      content: ""; }
+  .zone.none {
+    border-left-color: #fff; }
   .zone > h2 {
     padding-top: 0;
-    margin-top: 0; }
+    margin: 0; }
 
 .prepare h1 {
   font-size: 1.6em;
@@ -298,9 +303,9 @@ p {
     float: none; }
 
   .location > form {
-    width: -webkit-calc(100% - 40px);
-    width: -moz-calc(100% - 40px);
-    width: calc(100% - 40px); }
+    width: -webkit-calc(100% - 50px);
+    width: -moz-calc(100% - 50px);
+    width: calc(100% - 50px); }
     .location > form > input:first-of-type {
       width: -webkit-calc(100% - 40px);
       width: -moz-calc(100% - 40px);
@@ -316,8 +321,7 @@ p {
       -moz-border-radius: 0;
       border-radius: 0; }
       .menu > ul > li {
-        width: 25%;
-        padding: 15px 0; }
+        width: 25%; }
         .menu > ul > li:first-of-type, .menu > ul > li:last-of-type {
           -webkit-borer-radius: 0;
           -moz-border-radius: 0;

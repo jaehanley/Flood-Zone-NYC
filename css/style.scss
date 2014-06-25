@@ -1,6 +1,6 @@
 // Mixins & Variables
 $HelveticaNeue:HelveticaNeue,"Helvetica Neue",Helvetica,"Lucida Grande",LucidaGrande,Verdana,Roboto,"Droid Sans","segoe ui",Arial,sans-serif;
-$zoneSwatches:(#aa1a1a,#b64319,#c26b18,#cd9417,#d9bc16,#e5e515);
+$zoneSwatches:(#68154a,#9b1530,#ce1515,#da5c10,#e6a40b,#f2eb06);
 @mixin calc($operation,$value){
 	#{$operation}:-webkit-calc(#{$value});
 	#{$operation}:-moz-calc(#{$value});
@@ -110,8 +110,8 @@ p {
 	 > button {
 		position:relative;
 		cursor:pointer;
-		width:30px;
-		height:30px;
+		width:40px;
+		height:40px;
 		@include border-radius(4px);
 		border:none;
 		float:left;
@@ -122,8 +122,8 @@ p {
 		}
 		> span {
 			position:absolute;
-			top:5px;
-			left:5px;
+			top:10px;
+			left:10px;
 			margin:auto;
 			display:block;
 			width:20px;
@@ -138,7 +138,7 @@ p {
 		float:left;
 		font-family:$HelveticaNeue;
 		> input {
-			height:30px;
+			height:40px;
 			-webkit-appearance:none;
 			border:none;
 			margin:0;
@@ -172,53 +172,33 @@ p {
 		margin:0;
 		background-color:#fff;
 		padding:0;
-		@include border-radius(4px);
 		> li {
 			margin:0;
 			float:left;
-			padding:8px 0;
+			height:40px;
+			line-height:40px;
 			width:80px;
 			display:inline-block;
 			text-align:center;
 			font-size:.8em;
 			cursor:pointer;
-			@include button-blue;
-			&:first-of-type {
-				@include border-radius(4px 0 0 4px);
-			}
-			&:last-of-type {
-				@include border-radius(0 4px 4px 0);
+			background-color:#fff;
+			border-bottom:solid 2px #ccc;
+			position:relative;
+			&:not(:first-of-type):after {
+				width:1px;
+				position:absolute;
+				top:0;
+				bottom:-2px;
+				left:0;
+				background-color:#ccc;
+				content:"";
 			}
 			&:hover, &:focus {
-				@include button-blue-active;
-				color:#fff;
-			}
-			&:not(:first-of-type) {
-				border-left:solid thin #fff;
-				&:hover, &:focus {
-					border-left:solid thin #89BCF0;
-				}
-				&.active, &.active:hover {
-					border-left:solid thin #298CF0;
-				}
-			}
-			&:not(:last-of-type) {
-				border-right:solid thin #eaeaea;
-				&:hover, &:focus {
-					border-right:solid thin #298CF0;
-				}
-				&.active, &.active:hover {
-					border-right:solid thin #298CF0;
-				}
+				border-bottom-color:#333;
 			}
 			&.active {
-				color:#fff;
-				background: #58A4F0;
-				border:none;
-				&:hover {
-					color:#fff;
-					background:#58A4F0;
-				}
+				border-bottom-color:rgb(122,188,255);
 			}
 		}
 	}
@@ -228,7 +208,7 @@ p {
 	right:20px;
 	width:320px;
 	bottom:20px;
-	top:50px;
+	top:60px;
 	background-color:#fff;
 	padding:20px;
 	overflow:hidden;
@@ -258,7 +238,7 @@ p {
 		margin:0;
 		border:none;
 		height:40px;
-		@include button-dark;
+		background-color:#313131;
 	}
 }
 .location > *, .menu, .info {
@@ -291,15 +271,29 @@ p {
 	}
 }
 .zone {
-	padding:20px;
+	padding:20px 10px;
+	border-left:solid 20px;
+	position:relative;
 	@for $i from 1 through 6 {
 		&._#{$i} {
-			background-color:nth($zoneSwatches, $i);
+			border-left-color:nth($zoneSwatches, $i);
+			&:after {
+				position:absolute;
+				bottom:0;
+				left:0;
+				right:0;
+				height:1px;
+				background-color:#ccc;
+				content:"";
+			}
 		}
+	}
+	&.none {
+		border-left-color:#fff;
 	}
 	> h2 {
 		padding-top:0;
-		margin-top:0;
+		margin:0;
 	}
 }
 .prepare {
@@ -331,7 +325,7 @@ p {
 		float:none;
 	}
 	.location > form {
-		@include calc(width,"100% - 40px");
+		@include calc(width,"100% - 50px");
 		> input:first-of-type {
 			@include calc(width,"100% - 40px");
 		}
@@ -345,7 +339,6 @@ p {
 			@include border-radius(0);
 			> li {
 				width:25%;
-				padding:15px 0;
 				&:first-of-type, &:last-of-type {
 					@include border-radius(0);
 				}
