@@ -28,38 +28,112 @@ function initialize() {
 	var greyedOut = [ { color: "#CCCCCC" } ]
 	var styleArray = [
 		{
-			featureType: "road.arterial",
-			elementType: "geometry",
-			stylers: [
-				{ hue: "#666666" },
-				{ saturation: -100 },
-				{ lightness: 0 }
-			]
-		},{
-			featureType: "road.highway",
-			elementType: "geometry",
-			stylers: [
-				{ hue: "#A710DE" },
-				{ saturation: -90 },
-				{ lightness: 20 }
-			]
-		},{
-			featureType: "water",
-			stylers: [
-				{ hue: "#3F5375" },
-				{ saturation: -50 },
-				{ lightness: 0 }
-			]
-		},{
-			featureType: "poi.park",
-			stylers: greyedOut
-		},{
-			featureType: "administrative.land_parcel",
-			stylers: greyedOut
-		},{
-			featureType: "poi.attraction",
-			stylers: greyedOut
-		}
+	        "featureType": "landscape",
+	        "stylers": [
+	            {
+	                "saturation": -100
+	            },
+	            {
+	                "lightness": 65
+	            },
+	            {
+	                "visibility": "on"
+	            }
+	        ]
+	    },
+	    {
+	        "featureType": "poi",
+	        "stylers": [
+	            {
+	                "visibility": "off"
+	            }
+	        ]
+	    },
+	    {
+	        "featureType": "road.highway",
+	        "stylers": [
+	            {
+	                "saturation": -100
+	            },
+	            {
+	                "visibility": "simplified"
+	            }
+	        ]
+	    },
+	    {
+	        "featureType": "road.arterial",
+	        "stylers": [
+	            {
+	                "saturation": -100
+	            },
+	            {
+	                "lightness": 30
+	            },
+	            {
+	                "visibility": "on"
+	            }
+	        ]
+	    },
+	    {
+	        "featureType": "road.local",
+	        "stylers": [
+	            {
+	                "saturation": -100
+	            },
+	            {
+	                "lightness": 40
+	            },
+	            {
+	                "visibility": "on"
+	            }
+	        ]
+	    },
+	    {
+	        "featureType": "transit",
+	        "stylers": [
+	            {
+	                "saturation": -100
+	            },
+	            {
+	                "visibility": "off"
+	            }
+	        ]
+	    },
+	    {
+	        "featureType": "administrative.province",
+	        "stylers": [
+	            {
+	                "visibility": "off"
+	            }
+	        ]
+	    },
+	    {
+	        "featureType": "water",
+	        "elementType": "labels",
+	        "stylers": [
+	            {
+	                "visibility": "on"
+	            },
+	            {
+	                "lightness": -25
+	            },
+	            {
+	                "saturation": -100
+	            }
+	        ]
+	    },
+	    {
+	        "featureType": "water",
+	        "elementType": "geometry",
+	        "stylers": [
+	            {
+	                "lightness": -25
+	            },
+	            {
+	                "saturation": -90
+	            }
+	        ]
+	    }
 	];
 	// Google Maps positioning, control options
 	var nyc = new google.maps.LatLng(40.73, -73.95);

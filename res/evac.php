@@ -7,7 +7,7 @@
 				echo('<div class="evacLocation" data-geo="'.$evacRow['Geolocation'].'" >');
 				echo('<h2>'.$evacRow['Building Name'].'</h2>');
 				echo('<span>'.$evacRow['Street Address'].'</span>');
-				echo('<span>'.$evacRow['City'].','.$evacRow['State'].' '.$evacRow['Zip Code'].'</span>');
+				echo('<span>'.$evacRow['City'].', '.$evacRow['State'].' '.$evacRow['Zip Code'].'</span>');
 				echo('</div>');
 			}
 		?>
