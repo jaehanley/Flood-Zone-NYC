@@ -21,7 +21,7 @@
 		<p>If you found this tool useful, be sure to share it so it can help others as well.</p>
 		<a class="btn third" href="#facebook-share" onClick="facebookShare('http://www.floodzonenyc.com', 'Flood Zone NYC');">Facebook</a>
 		<a class="btn third twitter" href="https://twitter.com/home?status=Flood%20Zone%20NYC%20-%20http%3A%2F%2Fwww.floodzonenyc.com" target="_blank">Twitter</a>
-		<a class="btn third gplus" href="https://plus.google.com/share?url=http://www.darrellhanley.com" target="_blank">Google+</a>
+		<a class="btn third gplus" href="https://plus.google.com/share?url=http://www.floodzonenyc.com" target="_blank">Google+</a>
 		<div class="clearfix"></div>
 	</section>
 	<section>
