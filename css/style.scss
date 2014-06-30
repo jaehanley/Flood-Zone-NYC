@@ -1,3 +1,5 @@
+@import "bourbon/bourbon";
+
 // Mixins & Variables
 $HelveticaNeue:HelveticaNeue,"Helvetica Neue",Helvetica,"Lucida Grande",LucidaGrande,Verdana,Roboto,"Droid Sans","segoe ui",Arial,sans-serif;
 $zoneSwatches:(#68154a,#9b1530,#ce1515,#da5c10,#e6a40b,#f2eb06);
@@ -81,6 +83,9 @@ body {
 body {
 	margin:0;
 	padding:0;
+}
+.clearfix {
+	@include clearfix;
 }
 .mapcontainer {
 	position:fixed;
@@ -215,6 +220,9 @@ p {
 	display:none;
 	&.about {
 		display:block;
+		> div {
+			padding-bottom:20px;
+		}
 	}
 	> div {
 		position:absolute;
@@ -251,11 +259,11 @@ p {
 		}
 	}
 }
-.evac > div > section > h4 {
+.evac h4 {
 	margin:0;
-	padding:6px 20px;
+	padding:6px 10px;
 	color:#ffffff;
-	background-color:#292929;
+	background-color:#555;
 	font-weight:200;
 }
 .evacLocation {
@@ -310,6 +318,69 @@ p {
 		border-bottom:solid thin #ccc;
 	}
 }
+.two-links {
+	border:solid 1px #ccc;
+	margin-bottom:30px;
+	display:table;
+	width:100%;
+	border-collapse:collapse;
+	a {
+		display:block;
+		text-align:center;
+		height:80px;
+		width:50%;
+		display:table-cell;
+		vertical-align:middle;
+		&:first-of-type {
+			border-right:solid 1px #ccc;
+		}
+		&:hover {
+			background-color:lighten(#ccc, 15%);
+		}
+	}
+	img {
+		max-width:80%;
+	}
+}
+.btn {
+	$btn-color:#6296CC;
+	display:inline-block;
+	height:40px;
+	color:#fff;
+	background-color:$btn-color;
+	@include background(linear-gradient(to top, $btn-color, lighten($btn-color,2%)));
+	text-align:center;
+	line-height:40px;
+	border:solid 1px darken($btn-color, 20%);
+	font-size:em(14);
+	text-decoration:none;
+	-webkit-border-radius:4px;
+	-moz-border-radius:4px;
+	border-radius:4px;
+	text-shadow:1px 1px 1px rgba(#000,0.3);
+	&:hover {
+		background-color:darken($btn-color,10%);
+	@include background(linear-gradient(to top, darken($btn-color,10%), darken(lighten($btn-color,2%),10%)));
+	}
+	&.full {
+		width:100%;
+		margin-bottom:5px;
+	}
+	&.half {
+		width:49%;
+		float:left;
+		&:nth-of-type(2n){
+			margin-left:2%;
+		}
+	}
+	&.third {
+		width:(100% - 2% * 2) / 3;
+		float:left;
+		&:not(:nth-of-type(3n - 2)){
+			margin-left:2%;
+		}
+	}
+}
 @media screen and (max-width:859px){
 	.location > form > input:first-of-type {
 		width:300px;
@@ -351,7 +422,7 @@ p {
 		bottom:60px;
 	}
 	#map_canvas {
-		@include calc(height,"100% - 45px");
+		@include calc(height,"100% - 40px");
 	}
 }
 @-ms-viewport {

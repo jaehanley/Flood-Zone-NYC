@@ -2,9 +2,11 @@ google.maps.visualRefresh = true;
 
 var geocoder;
 var map;
+var fbAppId = 335444676610744;
 function initialize() {
-
-	console.log("Wanted to view under the hood? Checkout the source over at GitHub: https://github.com/darrellhanley/Flood-Zone-NYC\nAnd hey, maybe check out my portfolio while you're at it: http://www.darrellhanley.com");
+	if(window.console){
+		console.log("Wanted to view under the hood? Checkout the source over at GitHub: https://github.com/darrellhanley/Flood-Zone-NYC\nAnd hey, maybe check out my portfolio while you're at it: http://www.darrellhanley.com");
+	}
 	
 	//Mobile Device Optimizations//
 	setTimeout(function() {
@@ -231,10 +233,8 @@ function initialize() {
 }
 function codeAddress(event) {
 	event.preventDefault();
-	console.log('code address function fired');
 	var searchInput = $('.location input[type="search"]')[0];
 	var address = searchInput.value;
-	console.log('location input: '+address);
 	geocoder.geocode( { 'address': address}, function(results, status) {
 		if (status == google.maps.GeocoderStatus.OK) {
 			map.setCenter(results[0].geometry.location);
@@ -252,6 +252,7 @@ function codeAddress(event) {
     searchInput.blur();
     $('.info').attr('data-shown',false).delay(400).hide(0);
     $('.menu li').removeClass('active');
+    _gaq.push(['_trackEvent','Find by Address']);
 }
 
 // Evacuation Center Zoom in function, respons to activation via evacuation center list in absolutely placed div centered
@@ -269,6 +270,7 @@ function sensorRequest() {
 	else {
 		alert("Your browser does not support Geolocation. Please try updating your browser or use an alternative such as Mozilla Firefox or Google Chrome");
 	}
+	_gaq.push(['_trackEvent','Find by Geolocation']);
 }
 function success(position) {
 	var myLat = position.coords.latitude;
@@ -283,17 +285,16 @@ function success(position) {
 			
 	});
 	marker.setAnimation(google.maps.Animation.DROP);
-    console.log('Geolocation sucessful');
     $('.info').attr('data-shown',false).delay(400).hide(0);
     $('.menu li').removeClass('active');
 }
 function error() {
-	console.log('Geolocation unsuccessful');
 	alert("Couldn't find your current position. Make sure location detection is enabled");
 }
   
 // UI TOGGLE FUNCTIONS
 function navToggle() {
+	var pressedVal = $(this).html();
 	$('.menu li').removeClass('active');
 	$(this).addClass('active');
 	if($(this).hasClass('about-toggle')){
@@ -377,6 +378,7 @@ function navToggle() {
 			}
 		}
 	}
+	_gaq.push(['_trackEvent',pressedVal + ' button']);
 }
 function hideInfo() {
 	if($(this).parent().hasClass('about')){
@@ -397,7 +399,6 @@ function goToLocation(){
 	var location = $(this).attr('data-geo');
 	var locationArray = location.split(', ');
 	var geoLocation = new google.maps.LatLng(locationArray[0],locationArray[1]);
-	console.log(geoLocation);
 	map.panTo(geoLocation);
 	map.setZoom(16);
 	$('.evac').attr('data-shown',false).fadeOut(400);
@@ -415,6 +416,43 @@ function resizeForm(){
 		}
 	}
 }
+function facebookShare(url, name){
+	FB.ui({
+		name: name,
+		link: url,
+		method: "feed"
+	});
+}
+window.fbAsyncInit = function() {
+	FB.init({
+		appId      : fbAppId, // App ID
+		status     : true,    // check login status
+		cookie     : true,    // enable cookies to allow the
+		                    // server to access the session
+		xfbml      : true,     // parse page for xfbml or html5
+		                    // social plugins like login button below
+		version        : 'v2.0',  // Specify an API version
+	});
+};
+function newWindow(event){
+	event.preventDefault();
+	var href = $(this).attr('href');
+	var network;
+	if($(this).hasClass('twitter')){
+		network = 'Twitter';
+	}
+	else {
+		network = 'Google Plus';
+	}
+	window.open(href, 'Share to '+network, "menubar=no,location=no,resizable=yes,scrollbar=no,status=no,width=520,height=550");
+}
+(function(d, s, id){
+	var js, fjs = d.getElementsByTagName(s)[0];
+	if (d.getElementById(id)) {return;}
+	js = d.createElement(s); js.id = id;
+	js.src = "//connect.facebook.net/en_US/sdk.js";
+	fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
 $(function(){
 	$('.location > button').on('click',sensorRequest);
 	$('.location > form').on('submit', codeAddress);
@@ -422,6 +460,7 @@ $(function(){
 	$('.menu li').on('click', navToggle);
 	$('.info > button').on('click',hideInfo);
 	$('.evacLocation').on('click',goToLocation);
+	$('.twitter, .gplus').on('click', newWindow);
 	initialize();
 	resizeForm();
 });
