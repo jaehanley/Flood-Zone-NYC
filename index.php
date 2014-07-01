@@ -2,9 +2,12 @@
 ob_start("ob_gzhandler");
 include('res/data.php');?>
 <!DOCTYPE html itemscope itemtype="http://schema.org/Map">
-<html>
+<html class="<?php if($iOS){echo 'iOS';} if($android){echo 'android';} ?>">
 <head>
 <?php include_once('res/head.php'); ?>
+<script>
+console.log('<?php echo $userAgent; ?>');
+</script>
 </head>
 
 <body>
