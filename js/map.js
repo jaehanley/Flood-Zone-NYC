@@ -3,6 +3,10 @@ google.maps.visualRefresh = true;
 var geocoder;
 var map;
 var fbAppId = 335444676610744;
+var iOS = $('html').hasClass('iOS');
+var android = $('html').hasClass('android');
+var standalone = window.navigator.standalone;
+
 function initialize() {
 	if(window.console){
 		console.log("Wanted to view under the hood? Checkout the source over at GitHub: https://github.com/darrellhanley/Flood-Zone-NYC\nAnd hey, maybe check out my portfolio while you're at it: http://www.darrellhanley.com");
@@ -219,17 +223,6 @@ function initialize() {
 	locations.setMap(map);
 	//subways.setMap(map);
 	map.setOptions({styles: styleArray});
-	
-    var aboutscroll;
-	var ua = navigator.userAgent;
-	if (ua.indexOf("Android") >= 0 ) {
-		var androidVersion = parseFloat(ua.slice(ua.indexOf("Android")+8));
-		if (androidversion < 3.0) {
-			setTimeOut(function() {
-                aboutscroll = new iScroll('#aboutscroll');
-            }, 100);
-		}
-	}
 }
 function codeAddress(event) {
 	event.preventDefault();
@@ -422,6 +415,7 @@ function facebookShare(url, name){
 		link: url,
 		method: "feed"
 	});
+	_gaq.push(['_trackEvent','Facebook Share']);
 }
 window.fbAsyncInit = function() {
 	FB.init({
@@ -444,7 +438,18 @@ function newWindow(event){
 	else {
 		network = 'Google Plus';
 	}
-	window.open(href, 'Share to '+network, "menubar=no,location=no,resizable=yes,scrollbar=no,status=no,width=520,height=550");
+	_gaq.push(['_trackEvent',network + ' Share']);
+	if(iOS && standalone){
+		if(network == 'Twitter'){
+			window.location.href = 'twitter://post?message=Flood%20Zone%20NYC%20-%20http%3A%2F%2Fwww.floodzonenyc.com';
+		}
+		else if(network == 'Google Plus'){
+			window.location.href = 'gplus://plus.google.com/share?url=http://www.floodzonenyc.com';
+		}
+	}
+	else {
+		window.open(href, 'Share to '+network, "menubar=no,location=no,resizable=yes,scrollbar=no,status=no,width=520,height=550");
+	}
 }
 (function(d, s, id){
 	var js, fjs = d.getElementsByTagName(s)[0];
@@ -461,6 +466,9 @@ $(function(){
 	$('.info > button').on('click',hideInfo);
 	$('.evacLocation').on('click',goToLocation);
 	$('.twitter, .gplus').on('click', newWindow);
+	if(iOS && standalone){
+		$('#get-app').remove();
+	}
 	initialize();
 	resizeForm();
 });

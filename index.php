@@ -2,9 +2,12 @@
 ob_start("ob_gzhandler");
 include('res/data.php');?>
 <!DOCTYPE html itemscope itemtype="http://schema.org/Map">
-<html>
+<html class="<?php if($iOS){echo 'iOS';} if($android){echo 'android';} ?>">
 <head>
 <?php include_once('res/head.php'); ?>
+<script>
+console.log('<?php echo $userAgent; ?>');
+</script>
 </head>
 
 <body>
@@ -26,14 +29,5 @@ include('res/data.php');?>
     <section class="prepare info" data-shown="false">
         <?php include_once('res/prepare.php'); ?>
     </section>
-    <script>
-    window.twttr = (function (d, s, id) {
-        var t, js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-        js = d.createElement(s); js.id = id; js.src= "https://platform.twitter.com/widgets.js";
-        fjs.parentNode.insertBefore(js, fjs);
-        return window.twttr || (t = { _e: [], ready: function (f) { t._e.push(f) } });
-    }(document, "script", "twitter-wjs"));
-    </script>
 </body>
 </html>
