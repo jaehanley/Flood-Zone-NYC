@@ -153,12 +153,12 @@ p {
         top: 0;
         bottom: -2px;
         left: 0;
-        background-color: #ccc;
+        background-color: #aaa;
         content: ""; }
       .menu > ul > li:hover, .menu > ul > li:focus {
-        border-bottom-color: #333; }
+        border-bottom-color: #555; }
       .menu > ul > li.active {
-        border-bottom-color: #7abcff; }
+        border-bottom: solid 4px #7abcff; }
 
 .info {
   position: fixed;

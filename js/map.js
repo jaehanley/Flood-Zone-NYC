@@ -3,6 +3,7 @@ google.maps.visualRefresh = true;
 var geocoder;
 var map;
 var fbAppId = 335444676610744;
+var androidApp = false;
 var iOS = $('html').hasClass('iOS');
 var android = $('html').hasClass('android');
 var standalone = window.navigator.standalone;
@@ -245,7 +246,7 @@ function codeAddress(event) {
     searchInput.blur();
     $('.info').attr('data-shown',false).delay(400).hide(0);
     $('.menu li').removeClass('active');
-    _gaq.push(['_trackEvent','Find by Address']);
+    _gaq.push(['_trackEvent','Find Location','Address']);
 }
 
 // Evacuation Center Zoom in function, respons to activation via evacuation center list in absolutely placed div centered
@@ -263,7 +264,7 @@ function sensorRequest() {
 	else {
 		alert("Your browser does not support Geolocation. Please try updating your browser or use an alternative such as Mozilla Firefox or Google Chrome");
 	}
-	_gaq.push(['_trackEvent','Find by Geolocation']);
+	_gaq.push(['_trackEvent','Find Location','Geolocation']);
 }
 function success(position) {
 	var myLat = position.coords.latitude;
@@ -371,7 +372,7 @@ function navToggle() {
 			}
 		}
 	}
-	_gaq.push(['_trackEvent',pressedVal + ' button']);
+	_gaq.push(['_trackEvent','Show menu',pressedVal]);
 }
 function hideInfo() {
 	if($(this).parent().hasClass('about')){
@@ -415,7 +416,7 @@ function facebookShare(url, name){
 		link: url,
 		method: "feed"
 	});
-	_gaq.push(['_trackEvent','Facebook Share']);
+	_gaq.push(['_trackEvent','Share','Facebook']);
 }
 window.fbAsyncInit = function() {
 	FB.init({
@@ -438,7 +439,7 @@ function newWindow(event){
 	else {
 		network = 'Google Plus';
 	}
-	_gaq.push(['_trackEvent',network + ' Share']);
+	_gaq.push(['_trackEvent','Share',network]);
 	if(iOS && standalone){
 		if(network == 'Twitter'){
 			window.location.href = 'twitter://post?message=Flood%20Zone%20NYC%20-%20http%3A%2F%2Fwww.floodzonenyc.com';
@@ -450,6 +451,9 @@ function newWindow(event){
 	else {
 		window.open(href, 'Share to '+network, "menubar=no,location=no,resizable=yes,scrollbar=no,status=no,width=520,height=550");
 	}
+}
+function backPressed(){
+	hideInfo();
 }
 (function(d, s, id){
 	var js, fjs = d.getElementsByTagName(s)[0];

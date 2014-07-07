@@ -196,14 +196,14 @@ p {
 				top:0;
 				bottom:-2px;
 				left:0;
-				background-color:#ccc;
+				background-color:#aaa;
 				content:"";
 			}
 			&:hover, &:focus {
-				border-bottom-color:#333;
+				border-bottom-color:#555;
 			}
 			&.active {
-				border-bottom-color:rgb(122,188,255);
+				border-bottom:solid 4px rgb(122,188,255);
 			}
 		}
 	}
