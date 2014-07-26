@@ -3,6 +3,7 @@ google.maps.visualRefresh = true;
 var geocoder;
 var map;
 var fbAppId = 335444676610744;
+var androidApp = false;
 var iOS = $('html').hasClass('iOS');
 var android = $('html').hasClass('android');
 var standalone = window.navigator.standalone;
@@ -166,6 +167,33 @@ function initialize() {
   			templateId:2
   		}
 	});
+	// 100 Year Flood Plane
+	var FloodPlane2020 = new google.maps.FusionTablesLayer({
+		query: {
+			select: 'geometry',
+			from: '1x5zNobQtVT1R9NKK8qCaURqZpNncvU4CK0WR752K'
+		},
+		styles:[{
+			polygonOptions: {
+				fillColor: "#d8281a",
+				fillOpacity:0.4
+			}
+		}],
+		clickable:0
+	});
+	var FloodPlane2050 = new google.maps.FusionTablesLayer({
+		query: {
+			select: 'geometry',
+			from: '13W-yaGZUFSIkxiMUai20mYGgdc0XOM1n_aQ8yzbN'
+		},
+		styles:[{
+			polygonOptions: {
+				fillColor: "#d8281a",
+				fillOpacity:0.4
+			}
+		}],
+		clickable:0
+	});
 	// Evacuation Zones
 	var zones = new google.maps.FusionTablesLayer({
 		query: {
@@ -223,6 +251,29 @@ function initialize() {
 	locations.setMap(map);
 	//subways.setMap(map);
 	map.setOptions({styles: styleArray});
+	$('.toggle-map .option').on('click',function(){
+		var clicked = $('.toggle-map .option').index($(this));
+		$(this).addClass('active');
+		$(this).siblings().removeClass('active');
+		if(clicked == 0){
+			FloodPlane2020.setMap(null);
+			FloodPlane2050.setMap(null);
+			zones.setMap(map);
+			locations.setMap(map);
+		}
+		else if(clicked == 1){
+			zones.setMap(null);
+			locations.setMap(null);
+			FloodPlane2050.setMap(null);
+			FloodPlane2020.setMap(map);
+		}
+		else {
+			zones.setMap(null);
+			locations.setMap(null);
+			FloodPlane2020.setMap(null)
+			FloodPlane2050.setMap(map);
+		}
+	});
 }
 function codeAddress(event) {
 	event.preventDefault();
@@ -245,7 +296,7 @@ function codeAddress(event) {
     searchInput.blur();
     $('.info').attr('data-shown',false).delay(400).hide(0);
     $('.menu li').removeClass('active');
-    _gaq.push(['_trackEvent','Find by Address']);
+    _gaq.push(['_trackEvent','Find Location','Address']);
 }
 
 // Evacuation Center Zoom in function, respons to activation via evacuation center list in absolutely placed div centered
@@ -263,7 +314,7 @@ function sensorRequest() {
 	else {
 		alert("Your browser does not support Geolocation. Please try updating your browser or use an alternative such as Mozilla Firefox or Google Chrome");
 	}
-	_gaq.push(['_trackEvent','Find by Geolocation']);
+	_gaq.push(['_trackEvent','Find Location','Geolocation']);
 }
 function success(position) {
 	var myLat = position.coords.latitude;
@@ -371,7 +422,7 @@ function navToggle() {
 			}
 		}
 	}
-	_gaq.push(['_trackEvent',pressedVal + ' button']);
+	_gaq.push(['_trackEvent','Show menu',pressedVal]);
 }
 function hideInfo() {
 	if($(this).parent().hasClass('about')){
@@ -415,7 +466,7 @@ function facebookShare(url, name){
 		link: url,
 		method: "feed"
 	});
-	_gaq.push(['_trackEvent','Facebook Share']);
+	_gaq.push(['_trackEvent','Share','Facebook']);
 }
 window.fbAsyncInit = function() {
 	FB.init({
@@ -438,7 +489,7 @@ function newWindow(event){
 	else {
 		network = 'Google Plus';
 	}
-	_gaq.push(['_trackEvent',network + ' Share']);
+	_gaq.push(['_trackEvent','Share',network]);
 	if(iOS && standalone){
 		if(network == 'Twitter'){
 			window.location.href = 'twitter://post?message=Flood%20Zone%20NYC%20-%20http%3A%2F%2Fwww.floodzonenyc.com';
@@ -450,6 +501,16 @@ function newWindow(event){
 	else {
 		window.open(href, 'Share to '+network, "menubar=no,location=no,resizable=yes,scrollbar=no,status=no,width=520,height=550");
 	}
+}
+function backPressed(){
+	hideInfo();
+}
+function toggleMapLayers(){
+	$(this).addClass('active');
+	$(this).siblings().removeClass('active');
+}
+function toggleSubmenu(){
+	$(this).parent().toggleClass('show');
 }
 (function(d, s, id){
 	var js, fjs = d.getElementsByTagName(s)[0];
@@ -469,6 +530,7 @@ $(function(){
 	if(iOS && standalone){
 		$('#get-app').remove();
 	}
+	$('.toggle-map .menu-icon').on('click',toggleSubmenu);
 	initialize();
 	resizeForm();
 });
