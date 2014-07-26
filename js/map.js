@@ -167,6 +167,33 @@ function initialize() {
   			templateId:2
   		}
 	});
+	// 100 Year Flood Plane
+	var FloodPlane2020 = new google.maps.FusionTablesLayer({
+		query: {
+			select: 'geometry',
+			from: '1x5zNobQtVT1R9NKK8qCaURqZpNncvU4CK0WR752K'
+		},
+		styles:[{
+			polygonOptions: {
+				fillColor: "#d8281a",
+				fillOpacity:0.4
+			}
+		}],
+		clickable:0
+	});
+	var FloodPlane2050 = new google.maps.FusionTablesLayer({
+		query: {
+			select: 'geometry',
+			from: '13W-yaGZUFSIkxiMUai20mYGgdc0XOM1n_aQ8yzbN'
+		},
+		styles:[{
+			polygonOptions: {
+				fillColor: "#d8281a",
+				fillOpacity:0.4
+			}
+		}],
+		clickable:0
+	});
 	// Evacuation Zones
 	var zones = new google.maps.FusionTablesLayer({
 		query: {
@@ -224,6 +251,29 @@ function initialize() {
 	locations.setMap(map);
 	//subways.setMap(map);
 	map.setOptions({styles: styleArray});
+	$('.toggle-map .option').on('click',function(){
+		var clicked = $('.toggle-map .option').index($(this));
+		$(this).addClass('active');
+		$(this).siblings().removeClass('active');
+		if(clicked == 0){
+			FloodPlane2020.setMap(null);
+			FloodPlane2050.setMap(null);
+			zones.setMap(map);
+			locations.setMap(map);
+		}
+		else if(clicked == 1){
+			zones.setMap(null);
+			locations.setMap(null);
+			FloodPlane2050.setMap(null);
+			FloodPlane2020.setMap(map);
+		}
+		else {
+			zones.setMap(null);
+			locations.setMap(null);
+			FloodPlane2020.setMap(null)
+			FloodPlane2050.setMap(map);
+		}
+	});
 }
 function codeAddress(event) {
 	event.preventDefault();
@@ -455,6 +505,13 @@ function newWindow(event){
 function backPressed(){
 	hideInfo();
 }
+function toggleMapLayers(){
+	$(this).addClass('active');
+	$(this).siblings().removeClass('active');
+}
+function toggleSubmenu(){
+	$(this).parent().toggleClass('show');
+}
 (function(d, s, id){
 	var js, fjs = d.getElementsByTagName(s)[0];
 	if (d.getElementById(id)) {return;}
@@ -473,6 +530,7 @@ $(function(){
 	if(iOS && standalone){
 		$('#get-app').remove();
 	}
+	$('.toggle-map .menu-icon').on('click',toggleSubmenu);
 	initialize();
 	resizeForm();
 });

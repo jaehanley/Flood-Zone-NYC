@@ -1,8 +1,12 @@
-@import "bourbon/bourbon";
+@import "bourbon/bourbon",
+	"font-awesome/variables",
+	"font-awesome/path",
+	"font-awesome/core";
 
 // Mixins & Variables
 $HelveticaNeue:HelveticaNeue,"Helvetica Neue",Helvetica,"Lucida Grande",LucidaGrande,Verdana,Roboto,"Droid Sans","segoe ui",Arial,sans-serif;
 $zoneSwatches:(#68154a,#9b1530,#ce1515,#da5c10,#e6a40b,#f2eb06);
+$brand-red:#d8281a;
 @mixin calc($operation,$value){
 	#{$operation}:-webkit-calc(#{$value});
 	#{$operation}:-moz-calc(#{$value});
@@ -165,6 +169,13 @@ p {
 				@include button-white;
 				&:hover {
 					@include button-white-hover;
+				}
+			}
+			&[type="search"]{
+				background-color:rgba(#fff,0.95);
+				@include transition(background-color 0.4s);
+				&:focus {
+					background-color:#fff;
 				}
 			}
 		}
@@ -381,6 +392,53 @@ p {
 		}
 	}
 }
+.toggle-map {
+	position:absolute;
+	bottom:20px;
+	left:20px;
+	background-color:#fff;
+	list-style-type:none;
+	display:inline-block;
+	padding:10px;
+	@include box-shadow(0 0 5px rgba(0,0,0,0.3));
+	font-size:0.8em;
+	@media screen and (max-width:730px){
+		left:-327px;
+		@include transition(all 0.4s);
+		&.show {
+			@include transform(translateX(327px));
+		}
+	}
+	&:after {
+		content:"";
+		clear:both;
+	}
+	li {
+		float:left;
+		cursor:pointer;
+	}
+	.left {
+		padding-left:10px;
+		border-left:solid 1px #ccc;
+	}
+	.middle {
+		padding:0 10px;
+		border-left:solid 1px #ccc;
+	}
+	.right {
+		padding-right:10px;
+	}
+	.active {
+		color:$brand-red;
+	}
+	.menu-icon {
+		margin-left:10px;
+		display:none;
+		@media screen and (max-width:730px){
+			display:block;
+		}
+	}
+}
 @media screen and (max-width:859px){
 	.location > form > input:first-of-type {
 		width:300px;
@@ -423,6 +481,9 @@ p {
 	}
 	#map_canvas {
 		@include calc(height,"100% - 40px");
+	}
+	.toggle-map {
+		bottom:40px;
 	}
 }
 @-ms-viewport {
