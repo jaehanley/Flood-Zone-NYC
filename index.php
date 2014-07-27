@@ -17,6 +17,12 @@ console.log('<?php echo $userAgent; ?>');
     <header>
         <?php include_once('res/header.php'); ?>
     </header>
+    <ul class="toggle-map">
+        <li class="active left option">Evac Zones</li>
+        <li class="middle option">2020s Flood Plain</li>
+        <li class="right option">2050s Flood Plain</li>
+        <li class="menu-icon fa">&#xf0c9;</li>
+    </ul>
     <section class="about info" data-shown="true">
         <?php include_once('res/about.php'); ?>
     </section>
@@ -29,11 +35,5 @@ console.log('<?php echo $userAgent; ?>');
     <section class="prepare info" data-shown="false">
         <?php include_once('res/prepare.php'); ?>
     </section>
-    <ul class="toggle-map">
-        <li class="active right option">Evac Zones</li>
-        <li class="middle option">2020s Flood Plain</li>
-        <li class="left option">2050s Flood Plain</li>
-        <li class="menu-icon fa">&#xf0c9;</li>
-    </ul>
 </body>
 </html>

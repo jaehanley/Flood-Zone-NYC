@@ -1,7 +1,8 @@
 @import "bourbon/bourbon",
 	"font-awesome/variables",
 	"font-awesome/path",
-	"font-awesome/core";
+	"font-awesome/core",
+	"brandcolors";
 
 // Mixins & Variables
 $HelveticaNeue:HelveticaNeue,"Helvetica Neue",Helvetica,"Lucida Grande",LucidaGrande,Verdana,Roboto,"Droid Sans","segoe ui",Arial,sans-serif;
@@ -246,7 +247,7 @@ p {
 		overflow-x:hidden;
 		-webkit-overflow-scrolling:touch;
 	}
-	> button {
+	> a {
 		color:#fff;
 		font-size:.8em;
 		cursor:pointer;
@@ -258,6 +259,9 @@ p {
 		border:none;
 		height:40px;
 		background-color:#313131;
+		text-align:center;
+		font-size:14px;
+		line-height:40px;
 	}
 }
 .location > *, .menu, .info {
@@ -356,22 +360,21 @@ p {
 .btn {
 	$btn-color:#6296CC;
 	display:inline-block;
-	height:40px;
+	height:30px;
 	color:#fff;
 	background-color:$btn-color;
-	@include background(linear-gradient(to top, $btn-color, lighten($btn-color,2%)));
 	text-align:center;
-	line-height:40px;
+	line-height:30px;
 	border:solid 1px darken($btn-color, 20%);
-	font-size:em(14);
+	font-size:em(12);
 	text-decoration:none;
 	-webkit-border-radius:4px;
 	-moz-border-radius:4px;
 	border-radius:4px;
-	text-shadow:1px 1px 1px rgba(#000,0.3);
+	font-weight:300;
+	//text-shadow:1px 1px 1px rgba(#000,0.3);
 	&:hover {
 		background-color:darken($btn-color,10%);
-	@include background(linear-gradient(to top, darken($btn-color,10%), darken(lighten($btn-color,2%),10%)));
 	}
 	&.full {
 		width:100%;
@@ -389,6 +392,30 @@ p {
 		float:left;
 		&:not(:nth-of-type(3n - 2)){
 			margin-left:2%;
+		}
+	}
+	&.facebook {
+		background-color:$bc-facebook;
+		border-color:darken($bc-facebook,20%);
+		&:hover {
+			background-color:darken($bc-facebook,10%);
+			border-color:darken($bc-facebook,30%);
+		}
+	}
+	&.twitter {
+		background-color:$bc-twitter;
+		border-color:darken($bc-twitter,20%);
+		&:hover {
+			background-color:darken($bc-twitter,10%);
+			border-color:darken($bc-twitter,30%);
+		}
+	}
+	&.gplus {
+		background-color:$bc-google;
+		border-color:darken($bc-google,20%);
+		&:hover {
+			background-color:darken($bc-google,10%);
+			border-color:darken($bc-google,30%);
 		}
 	}
 }
@@ -409,6 +436,12 @@ p {
 			@include transform(translateX(327px));
 		}
 	}
+	@media screen and (max-width:399px){
+		left:-140px;
+		&.show {
+			@include transform(translateX(140px));
+		}
+	}
 	&:after {
 		content:"";
 		clear:both;
@@ -416,17 +449,35 @@ p {
 	li {
 		float:left;
 		cursor:pointer;
+		@media screen and (max-width:399px){
+			float:none;
+			width:120px;
+			margin:5px 0 !important;
+		}
 	}
-	.left {
+	.right {
 		padding-left:10px;
 		border-left:solid 1px #ccc;
+		@media screen and (max-width:399px){
+			border-left:0;
+			padding-left:0;
+		}
 	}
 	.middle {
 		padding:0 10px;
 		border-left:solid 1px #ccc;
+		@media screen and (max-width:399px){
+			padding:0;
+			border-left:0;
+			border-top:solid 1px #ccc;
+			border-bottom:solid 1px #ccc;
+		}
 	}
-	.right {
+	.left {
 		padding-right:10px;
+		@media screen and (max-width:399px){
+			padding-right:0;
+		}
 	}
 	.active {
 		color:$brand-red;
@@ -436,6 +487,29 @@ p {
 		display:none;
 		@media screen and (max-width:730px){
 			display:block;
+		}
+		@media screen and (max-width:399px){
+			position:absolute;
+			bottom:-5px;
+			right:-30px;
+			width:auto;
+			background-color:#fff;
+			padding:10px;
+		}
+	}
+}
+.googft-info-window {
+	h4 {
+		display:none;
+	}
+	ul {
+		list-style-type:none;
+		margin:0;
+		padding:0;
+		li {
+			&:last-of-type {
+				display:none;
+			}
 		}
 	}
 }
@@ -483,7 +557,7 @@ p {
 		@include calc(height,"100% - 40px");
 	}
 	.toggle-map {
-		bottom:40px;
+		bottom:60px;
 	}
 }
 @-ms-viewport {
