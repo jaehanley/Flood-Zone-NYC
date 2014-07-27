@@ -252,26 +252,28 @@ function initialize() {
 	//subways.setMap(map);
 	map.setOptions({styles: styleArray});
 	$('.toggle-map .option').on('click',function(){
-		var clicked = $('.toggle-map .option').index($(this));
-		$(this).addClass('active');
-		$(this).siblings().removeClass('active');
-		if(clicked == 0){
-			FloodPlane2020.setMap(null);
-			FloodPlane2050.setMap(null);
-			zones.setMap(map);
-			locations.setMap(map);
-		}
-		else if(clicked == 1){
-			zones.setMap(null);
-			locations.setMap(null);
-			FloodPlane2050.setMap(null);
-			FloodPlane2020.setMap(map);
-		}
-		else {
-			zones.setMap(null);
-			locations.setMap(null);
-			FloodPlane2020.setMap(null)
-			FloodPlane2050.setMap(map);
+		if(!$(this).hasClass('active')){
+			var clicked = $('.toggle-map .option').index($(this));
+			$(this).addClass('active');
+			$(this).siblings().removeClass('active');
+			if(clicked == 0){
+				FloodPlane2020.setMap(null);
+				FloodPlane2050.setMap(null);
+				zones.setMap(map);
+				locations.setMap(map);
+			}
+			else if(clicked == 1){
+				zones.setMap(null);
+				locations.setMap(null);
+				FloodPlane2050.setMap(null);
+				FloodPlane2020.setMap(map);
+			}
+			else {
+				zones.setMap(null);
+				locations.setMap(null);
+				FloodPlane2020.setMap(null)
+				FloodPlane2050.setMap(map);
+			}
 		}
 	});
 }
@@ -483,6 +485,8 @@ function newWindow(event){
 	event.preventDefault();
 	var href = $(this).attr('href');
 	var network;
+	var centerWidth = screen.width / 2 - 520 / 2;
+	var centerHeight = screen.height / 2 - 550 / 2;
 	if($(this).hasClass('twitter')){
 		network = 'Twitter';
 	}
@@ -499,7 +503,7 @@ function newWindow(event){
 		}
 	}
 	else {
-		window.open(href, 'Share to '+network, "menubar=no,location=no,resizable=yes,scrollbar=no,status=no,width=520,height=550");
+		window.open(href, 'Share to '+network, "menubar=no,location=no,resizable=yes,scrollbar=no,status=no,width=520,height=550,top="+centerHeight+",left="+centerWidth);
 	}
 }
 function backPressed(){
@@ -524,7 +528,7 @@ $(function(){
 	$('.location > form').on('submit', codeAddress);
 	$('.location input[type="button"]').on('click',codeAddress);
 	$('.menu li').on('click', navToggle);
-	$('.info > button').on('click',hideInfo);
+	$('.info > a').on('click',hideInfo);
 	$('.evacLocation').on('click',goToLocation);
 	$('.twitter, .gplus').on('click', newWindow);
 	if(iOS && standalone){

@@ -22,4 +22,4 @@
 		<p>Residents who do not live in a hurricane evacuation zone face are unlikely to experience a storm surge flooding from a hurricane.</p>
 	</section>
 </div>
-<button>Close</button>
+<a>Close</a>

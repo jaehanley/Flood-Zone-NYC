@@ -42,4 +42,4 @@
 		</div>
 	</section>
 </div>
-<button>Close</button>
+<a>Close</a>
