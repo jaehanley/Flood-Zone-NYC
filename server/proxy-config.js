@@ -20,4 +20,12 @@ module.exports = {
     changeOrigin: true,
   },
   */
+  '/api/zones': {
+    target: 'https://data.cityofnewyork.us/resource/6ytb-z543.json',
+    changeOrigin: true,
+  },
+  '/api/evac-centers': {
+    target: 'https://data.cityofnewyork.us/resource/addd-ji6a.json',
+    changeOrigin: true,
+  }
 };
