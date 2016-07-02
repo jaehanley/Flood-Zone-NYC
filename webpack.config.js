@@ -32,12 +32,12 @@ module.exports = {
 
   module: {
     preLoaders: [
-      { test: /\.js$/, loader: 'source-map-loader' },
-      { test: /\.js$/, loader: 'eslint-loader' },
+      { test: /\.(js|jsx)$/, loader: 'source-map-loader' },
+      { test: /\.(js|jsx)$/, loader: 'eslint-loader' },
     ],
     loaders: [
       { test: /\.css$/, loader: 'style-loader!css-loader!postcss-loader' },
-      { test: /\.js$/, loaders: ['react-hot', 'babel'], exclude: /node_modules/ },
+      { test: /\.(js|jsx)$/, loaders: ['react-hot', 'babel'], exclude: /node_modules/ },
       { test: /\.json$/, loader: 'json-loader' },
       { test: /\.(png|jpg|jpeg|gif|svg)$/, loader: 'url-loader?prefix=img/&limit=5000' },
       { test: /\.(woff|woff2|ttf|eot)$/, loader: 'url-loader?prefix=font/&limit=5000' },
