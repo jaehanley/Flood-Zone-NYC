@@ -1,13 +1,24 @@
 {
-  "presets": ["es2015", "react", "stage-0"],
+  "presets": [
+    "es2015",
+    "stage-1",
+    "stage-0",
+    "react"
+  ],
   "env": {
-    "test": {
+    "development": {
       "plugins": [
-        ["__coverage__", { "ignore": "" }]
+        ["react-transform", {
+          "transforms": [{
+            "transform": "react-transform-hmr",
+            "imports": ["react"],
+            "locals": ["module"]
+          }, {
+            "transform": "react-transform-catch-errors",
+            "imports": ["react", "redbox-react"]
+          }]
+        }]
       ]
-    },
-    "production": {
-      "plugins": ["transform-react-inline-elements", "transform-react-constant-elements"]
     }
   }
 }

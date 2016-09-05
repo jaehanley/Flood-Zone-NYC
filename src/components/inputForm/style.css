@@ -1,0 +1,107 @@
+.searchContainer,
+.inputContainer,
+.topView {
+  display: flex;
+}
+
+.topView {
+  width: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+  flex-direction: column;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  background-color: #e7e7e7;
+  text-align: center;
+  @media screen and (min-width: 600px) {
+    max-width: 380px;
+  }
+}
+
+.inAppMode {
+  &:before {
+    content: '';
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background-image: linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0));
+  }
+}
+
+.searchContainer {
+  position: fixed;
+  top: 10px;
+  left: 0;
+  width: 100%;
+  padding: 0 10px;
+  justify-content: center;
+
+  .inAppMode & {
+    top: 30px;
+  }
+}
+
+.locationStatus {
+  padding: 9px 10px;
+  color: #4b4b4b;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.inputContainer {
+  flex: 1;
+  height: 40px;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.2);
+
+  form {
+    flex: 1 0;
+  }
+
+  input {
+    width: 100%;
+    height: 40px;
+    border: 0 none;
+    border-right: solid 1px #f1f1f1;
+    color: #4d4d4d;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 0;
+
+    &:focus {
+      background-color: #fcfcfc;
+    }
+  }
+
+  .geolocate,
+  input {
+    appearance: none;
+    background-color: #fff;
+
+    &:focus {
+      outline: 0 none;
+    }
+  }
+}
+
+.geolocate {
+  width: 40px;
+  display: block;
+  flex: 0 0 40px;
+  border: 0 none;
+  padding: 0;
+  background-position: center center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin: 0;
+
+  &:hover,
+  &:focus {
+    background-color: #fcfcfc;
+  }
+}

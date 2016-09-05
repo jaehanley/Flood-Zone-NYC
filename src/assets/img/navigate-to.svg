@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 39.1 (31720) - http://www.bohemiancoding.com/sketch -->
+    <title>navigate-to</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-1-Copy-7" transform="translate(-331.000000, -128.000000)" fill="#818181">
+            <g id="Group-3" transform="translate(10.000000, 32.000000)">
+                <g id="Group-4">
+                    <g id="Group-6" transform="translate(0.000000, 84.000000)">
+                        <path d="M334.92835,12.9247159 C335.057612,12.6761364 335.007896,12.3778409 334.809032,12.1889205 C334.689714,12.0596591 334.530623,12 334.361589,12 C334.262157,12 334.162725,12.0198864 334.073237,12.0696023 L321.345964,18.4332386 C321.087441,18.5625 320.948237,18.8607955 321.017839,19.1491477 C321.087441,19.4375 321.336021,19.6363636 321.634316,19.6363636 L327.361589,19.6363636 L327.361589,25.3636364 C327.361589,25.6619318 327.560452,25.9105114 327.848805,25.9801136 C327.898521,25.9900568 327.948237,26 327.997952,26 C328.236589,26 328.455339,25.8707386 328.564714,25.6519886 L334.92835,12.9247159 Z" id="navigate-to"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,48 +1,116 @@
-const path = require('path');
-const proxy = require('./server/webpack-dev-proxy');
-const plugins = require('./webpack/plugins');
-const postcss = require('./webpack/postcss');
+var path = require('path');
+var precss = require('precss');
+var webpack = require('webpack');
+var autoprefixer = require('autoprefixer');
+var postcssImport = require('postcss-import');
+var postcssCalc = require('postcss-calc');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 
-function getEntrySources(sources) {
-  if (process.env.NODE_ENV !== 'production') {
-    sources.push('webpack-hot-middleware/client');
-  }
+var env = process.env.NODE_ENV || 'development';
+var isProduction = env === 'production';
+var isDevelopment = env === 'development';
+var isTest = env === 'test';
+var cssModuleIdentName = env === 'development' ? '[path][name]---[local]---[hash:base64:5]' : '[hash:base64]';
 
-  return sources;
+var config = {
+  entry: ['./src/index.jsx'],
+  module: {
+    preLoaders: [],
+    loaders: [
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader',
+        include: [
+          path.join(__dirname, 'src'),
+        ],
+        query: {
+          presets: ['es2015', 'stage-1', 'stage-0', 'react']
+        }
+      },
+      {
+        test: /\.css$/,
+        exclude: /node_modules/,
+        include: [path.join(__dirname, 'src')],
+        loader: 'style!css?modules&importLoaders=1&localIdentName=' + cssModuleIdentName + '!postcss'
+      },
+      {
+        test: /\.svg$/,
+        loader: 'file',
+        include: [path.join(__dirname, 'src')]
+      },
+      {
+        test: /\.(mp4|webm|ogv)$/,
+        loader: 'file',
+        include: [path.join(__dirname, 'src')]
+      }
+    ]
+  },
+  postcss: function(webpackInstance) {
+    var postCssPlugins = [];
+    var postCssImportPlugins = [];
+
+    if (isDevelopment) {
+      var stylelint = require('stylelint');
+      var stylelintConfig = {
+        configFile: path.join(__dirname, '.stylelint.config.js')
+      };
+      postCssPlugins.push(stylelint(stylelintConfig));
+      postCssImportPlugins.push(stylelint(stylelintConfig));
+    }
+
+    return postCssPlugins.concat([
+      postcssImport({
+        addDependencyTo: webpackInstance,
+        path: [path.join(__dirname, 'src')],
+        plugins: postCssImportPlugins // Lint imported stylesheets
+      }),
+      autoprefixer({ browsers: ['last 2 versions'] }),
+      precss,
+      postcssCalc({mediaQueries: true})
+    ]);
+  },
+  resolve: {
+    extensions: ['', '.js', '.jsx', '.css'],
+    modulesDirectories: [
+      path.join(__dirname, 'src'),
+      'node_modules',
+      ''
+    ]
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: 'index.html'
+    }),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(env)
+    })
+  ]
+};
+
+if (isProduction) {
+  config.output = {
+    path: path.join(__dirname, 'dist'),
+    publicPath: '/',
+    filename: 'assets/bundle.js'
+  };
+} else {
+  config.output = {
+    path: path.join(__dirname, 'dist'),
+    publicPath: '/',
+    filename: 'bundle.js'
+  };
+  config.devtool = 'source-map';
+  config.module.preLoaders.push({
+    test: /\.(js|jsx)$/,
+    exclude: /node_modules/,
+    include: [path.join(__dirname, 'src')],
+    loader: 'eslint-loader'
+  });
+  config.entry.push('webpack-hot-middleware/client');
+  config.plugins.unshift(
+    new webpack.HotModuleReplacementPlugin()
+  );
 }
 
-module.exports = {
-  entry: { app: getEntrySources(['./src/index.js']) },
-
-  output: {
-    path: path.join(__dirname, 'dist'),
-    filename: '[name].[hash].js',
-    publicPath: '/',
-    sourceMapFilename: '[name].[hash].js.map',
-    chunkFilename: '[id].chunk.js',
-  },
-
-  devtool: 'source-map',
-  plugins: plugins,
-
-  devServer: {
-    historyApiFallback: { index: '/' },
-    proxy: Object.assign({}, proxy(), { '/api/*': 'http://localhost:3000' }),
-  },
-
-  module: {
-    preLoaders: [
-      { test: /\.(js|jsx)$/, loader: 'source-map-loader' },
-      { test: /\.(js|jsx)$/, loader: 'eslint-loader' },
-    ],
-    loaders: [
-      { test: /\.css$/, loader: 'style-loader!css-loader!postcss-loader' },
-      { test: /\.(js|jsx)$/, loaders: ['react-hot', 'babel'], exclude: /node_modules/ },
-      { test: /\.json$/, loader: 'json-loader' },
-      { test: /\.(png|jpg|jpeg|gif|svg)$/, loader: 'url-loader?prefix=img/&limit=5000' },
-      { test: /\.(woff|woff2|ttf|eot)$/, loader: 'url-loader?prefix=font/&limit=5000' },
-    ],
-  },
-
-  postcss: postcss,
-};
+module.exports = config;
