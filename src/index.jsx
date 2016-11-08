@@ -1,4 +1,5 @@
 import 'babel-polyfill';
+import 'fetch-polyfill';
 import React from 'react';
 import ReactDOM, { render } from 'react-dom';
 import a11y from 'react-a11y';

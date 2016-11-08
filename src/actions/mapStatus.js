@@ -2,6 +2,7 @@ export const SET_CENTER = 'SET_CENTER';
 export const SET_ZONE_TRUE = 'SET_ZONE_TRUE';
 export const SET_ZONE_FALSE = 'SET_ZONE_FALSE';
 export const SET_RAW_LOCATION = 'SET_RAW_LOCATION';
+export const SET_WAITING_EVAL = 'SET_WAITING_EVAL';
 
 export function setCenter(lat, long) {
   return {
@@ -23,5 +24,12 @@ export function setRawLocation(string, stringType) {
     type: SET_RAW_LOCATION,
     string,
     stringType,
+  };
+}
+
+export function setWaiting(waiting) {
+  return {
+    type: SET_WAITING_EVAL,
+    waiting,
   };
 }

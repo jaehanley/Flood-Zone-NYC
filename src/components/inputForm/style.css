@@ -7,13 +7,10 @@
 .topView {
   width: 100%;
   border-radius: 4px;
-  overflow: hidden;
   flex-direction: column;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  background-color: #e7e7e7;
   text-align: center;
   @media screen and (min-width: 600px) {
-    max-width: 380px;
+    max-width: 560px;
   }
 }
 
@@ -48,6 +45,17 @@
   color: #4b4b4b;
   font-weight: 600;
   font-size: 14px;
+  width: 90%;
+  background-color: #e3e3e3;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  border-radius: 0 0 4px 4px;
+  margin: 0 auto;
+  transition: all 0.2s;
+
+  &.activeZone {
+    color: #fff;
+    background-color: #222;
+  }
 }
 
 .inputContainer {
@@ -56,6 +64,7 @@
   border-radius: 4px;
   overflow: hidden;
   box-shadow: 0 1px 5px rgba(0,0,0,0.2);
+  z-index: 1;
 
   form {
     flex: 1 0;

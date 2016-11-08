@@ -3,6 +3,7 @@ import {
   SET_ZONE_TRUE,
   SET_ZONE_FALSE,
   SET_RAW_LOCATION,
+  SET_WAITING_EVAL,
 } from '../actions/mapStatus';
 
 const initialState = {
@@ -10,12 +11,13 @@ const initialState = {
     lat: 40.70772349475603,
     lng: -73.96261174678801,
   },
-  inZone: false,
   containedIn: null,
+  inZone: false,
   rawLocation: {
     string: null,
     type: null,
   },
+  waitingEval: false,
 };
 
 export default function(state = initialState, action = {}) {
@@ -48,6 +50,11 @@ export default function(state = initialState, action = {}) {
           string: action.string,
           type: action.stringType,
         }
+      };
+    case SET_WAITING_EVAL:
+      return {
+        ...state,
+        watingEval: action.waiting
       };
     default:
       return state;

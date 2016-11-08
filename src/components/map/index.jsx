@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import geolib from 'geolib';
+import { inside } from '@turf/turf';
 import {
   setInZone,
   setRawLocation,
@@ -34,13 +34,9 @@ class Map extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { shelters, zones, center } = this.props;
-    const nextShelters = nextProps.shelters;
+    const { zones, center } = this.props;
     const nextZones = nextProps.zones;
     const nextCenter = nextProps.center;
-    if (nextShelters.locations !== shelters.locations) {
-      this.addSheltersToMap(nextShelters.locations);
-    }
     if (nextZones.locations !== zones.locations) {
       this.addZonesToMap(nextZones.locations);
     }
@@ -49,12 +45,44 @@ class Map extends Component {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    const { shelters } = this.props;
+    const prevShelters = prevProps.shelters;
+    if (shelters.locations !== prevShelters.locations) {
+      this.addSheltersToMap(shelters.locations);
+    }
+  }
+
+  setMapAddress(lat, lng) {
+    const google = window.google;
+    if (google) {
+      // eslint-disable-next-line new-parens
+      const geocoder = new google.maps.Geocoder;
+      geocoder.geocode(
+        { location: { lat, lng } },
+        (results, status) => {
+          if (status === 'OK' && results[1]) {
+            this.props.setRawLocation(
+              results[1].formatted_address,
+              'address'
+            );
+          } else {
+            this.props.setRawLocation(
+              `${lat}, ${lng}`,
+              'coords'
+            );
+          }
+        }
+      );
+    }
+  }
+
   addSheltersToMap(shelters) {
     const google = window.google;
     for (let i = 0; i < shelters.length; i++) {
       const shelter = shelters[i];
       const coords = shelter.geometry.coordinates;
-      const googCoords = new google.maps.LatLng(coords[0], coords[1]);
+      const googCoords = new google.maps.LatLng(coords[1], coords[0]);
       const marker = new google.maps.Marker({
         position: googCoords,
         title: shelter.properties.ec_name,
@@ -72,17 +100,17 @@ class Map extends Component {
       const level = feature.getProperty('hurricane');
       let fill;
       if (level === '1') {
-        fill = '#181D47';
+        fill = '#2F0B3C';
       } else if (level === '2') {
-        fill = '#003566';
+        fill = '#09355B';
       } else if (level === '3') {
-        fill = '#296399';
+        fill = '#1D719D';
       } else if (level === '4') {
-        fill = '#6193C2';
+        fill = '#4F80C5';
       } else if (level === '5') {
-        fill = '#75B2EB';
+        fill = '#7FB6F3';
       } else if (level === '6') {
-        fill = '#C2E1FF';
+        fill = '#C9EDFF';
       }
       return ({
         visible: !(level === '0' || level === 'X'),
@@ -98,37 +126,32 @@ class Map extends Component {
     const google = window.google;
     const googCords = new google.maps.LatLng(center.lat, center.long);
     this.mapView.panTo(googCords);
-    this.zoneCheck(
-      center.lat,
-      center.long
-    );
   }
 
   zoneCheck(latitude, longitude) {
     const { zones } = this.props;
+    const point = {
+      type: 'Feature',
+      properties: {
+        'marker-color': '#f00'
+      },
+      geometry: {
+        type: 'Point',
+        coordinates: [
+          longitude,
+          latitude,
+        ]
+      }
+    };
     for (let i = 0; i < zones.locations.length; i++) {
       const zone = zones.locations[i];
-      for (let j = 0; j < zone.geometry.coordinates.length; j++) {
-        const poly = zone.geometry.coordinates[j];
-        const polyFormatted = [];
-        for (let k = 0; k < poly[0].length; k++) {
-          const formattedCords = {
-            latitude: poly[0][k][0],
-            longitude: poly[0][k][1],
-          };
-          polyFormatted.push(formattedCords);
-        }
-        const isInside = geolib.isPointInside(
-          {
-            latitude,
-            longitude,
-          },
-          polyFormatted
+      const inZone = inside(point, zone);
+      if (inZone) {
+        this.props.setInZone(
+          true,
+          zone.properties.hurricane
         );
-        if (isInside) {
-          this.props.setInZone(true, zone.properites.hurricane);
-          return;
-        }
+        return;
       }
     }
     this.props.setInZone(false);
@@ -166,7 +189,7 @@ class Map extends Component {
       document.getElementById('map'),
       {
         center: startCenter,
-        zoom: window.innerWidth > 600 ? 14 : 12,
+        zoom: 14,
         disableDefaultUI: true,
         zoomControl: true,
         zoomControlOptions: {
@@ -181,14 +204,34 @@ class Map extends Component {
     this.props.getZones();
     this.props.getShelters();
 
+    this.setMapAddress(
+      center.lat,
+      center.lng,
+    );
+
     this.centerMarker = new google.maps.Marker({
       postition: startCenter,
       map: mapView,
     });
 
-    // Google Maps View
+    // Google Maps View Events
+    let centerTimeout;
+    let prevCenter = {
+      lat: center.lat,
+      lng: center.lng,
+    };
     google.maps.event.addListener(mapView, 'center_changed', () => {
       this.handleCenterChange();
+      clearTimeout(centerTimeout);
+      centerTimeout = setTimeout(() => {
+        const lat = this.mapView.getCenter().lat();
+        const lng = this.mapView.getCenter().lng();
+        if (prevCenter !== { lat, lng }) {
+          prevCenter = { lat, lng };
+          this.setMapAddress(lat, lng);
+          this.zoneCheck(lat, lng);
+        }
+      }, 600);
     });
 
     window.addEventListener('resize', () => {

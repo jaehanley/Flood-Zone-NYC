@@ -3,7 +3,7 @@ export default function modelZones(zones) {
   for (let i = 0; i < zones.length; i++) {
     const zone = zones[i];
     const grade = zone.properties.hurricane;
-    if (!(grade === '6' || grade.toLowerCase() === 'x')) {
+    if (!(grade.toLowerCase() === 'x' || grade === '0')) {
       output.push(zone);
     }
   }
