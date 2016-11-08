@@ -4,7 +4,7 @@
   "description": "A validator tool for Brightcove Players",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --inline --hot",
+    "start": "webpack-dev-server --inline --hot --https --host 0.0.0.0",
     "build": "rm -rf dist && NODE_ENV=production webpack -p"
   },
   "keywords": [

@@ -9,12 +9,22 @@ import locationBtn from '../../assets/img/location.svg';
 
 class InputForm extends Component {
   static propTypes = {
+    center: PropTypes.object,
     containedIn: PropTypes.string,
     inZone: PropTypes.bool.isRequired,
+    nearbyShelters: PropTypes.array,
     rawLocation: PropTypes.object.isRequired,
     setCenter: PropTypes.func.isRequired,
     setRawLocation: PropTypes.func.isRequired,
     waitingEval: PropTypes.bool.isRequired,
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      processedInput: false,
+      previousInput: '',
+    };
   }
 
   componentWillReceiveProps(newProps) {
@@ -63,6 +73,7 @@ class InputForm extends Component {
 
   getAddressLocation(event) {
     event.preventDefault();
+    this.mapInput.blur();
     const address = this.mapInput.value;
     const google = window.google;
     if (google) {
@@ -84,21 +95,48 @@ class InputForm extends Component {
 
   updateInputLocation(newAddress) {
     this.mapInput.value = newAddress.string;
+    this.setState({
+      processedInput: true,
+    });
+  }
+
+  clearInput() {
+    const { processedInput } = this.state;
+    if (processedInput) {
+      this.setState({
+        previousInput: this.mapInput.value,
+        processedInput: false,
+      });
+      this.mapInput.value = '';
+    }
+  }
+
+  fillInput() {
+    const { previousInput } = this.state;
+    if (this.mapInput.value === '') {
+      this.mapInput.value = previousInput;
+      this.setState({
+        processedInput: true,
+      });
+    }
   }
 
   render() {
     const {
-      rawLocation,
-      inZone,
+      center,
       containedIn,
+      inZone,
+      nearbyShelters,
+      rawLocation,
       waitingEval,
     } = this.props;
     const iosApp = window.navigator.standalone;
+    const ios = window.navigator.userAgent.match(/iPhone|iPad|iPod/g);
     let outputMessage = 'Not in an evac zone';
     if (waitingEval) {
       outputMessage = 'Loading…';
     } else if (inZone) {
-      outputMessage = `In evac zone ${containedIn}`;
+      outputMessage = `In evac zone ${containedIn} - nearby shelters`;
     }
     return (
       <div className={iosApp ? style.inAppMode : style.webMode}>
@@ -114,6 +152,8 @@ class InputForm extends Component {
                   type='text'
                   ref={(c) => { this.mapInput = c; }}
                   defaultValue={rawLocation.string || ''}
+                  onFocus={this.clearInput.bind(this)}
+                  onBlur={this.fillInput.bind(this)}
                 />
               </form>
               {(window && 'geolocation' in window.navigator) && (
@@ -138,6 +178,33 @@ class InputForm extends Component {
             >
               <span>{outputMessage}</span>
             </div>
+            {inZone && (
+              <div className={style.shelters}>
+                {nearbyShelters.map((shelter) => {
+                  const props = shelter.properties;
+                  const coords = shelter.geometry.coordinates;
+                  return (
+                    <div className={style.shelter}>
+                      <div className={style.shelterInfo}>
+                        <b>{props.address}</b>
+                        <i>{props.city}, {props.state} {parseInt(props.zip_code, 10)}</i>
+                        <span>{props.distance.toFixed(2)}mi</span>
+                      </div>
+                      <a
+                        aria-label='get directions'
+                        className={style.directions}
+                        href={ios
+                          ? `http://maps.apple.com/?daddr=${coords[1]},${coords[0]}&saddr=${center.lat},${center.lng}`
+                          : `https://www.google.com/maps/dir/${center.lat},${center.lng}/${coords[1]},${coords[0]}`
+                        }
+                        rel='noopener noreferrer'
+                        target='_blank'
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -147,10 +214,12 @@ class InputForm extends Component {
 
 function mapStateToProps(state) {
   return {
+    center: state.mapStatus.center,
     containedIn: state.mapStatus.containedIn,
     inZone: state.mapStatus.inZone,
     rawLocation: state.mapStatus.rawLocation,
     waitingEval: state.mapStatus.waitingEval,
+    nearbyShelters: state.mapStatus.nearbyShelters,
   };
 }
 

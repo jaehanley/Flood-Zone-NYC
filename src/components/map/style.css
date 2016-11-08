@@ -9,5 +9,26 @@
   .mapView {
     display: flex;
     flex: 1;
+
+    &:after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 20px;
+      height: 20px;
+      transform: translate(-10px,-10px);
+      content: '';
+      border-radius: 10px;
+      background-image: url('../../assets/img/marker.svg');
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      transition: all 0.2s;
+    }
+
+    &.active {
+      &:after {
+        transform: translate(-10px,-20px);
+        box-shadow: 0 12px 4px rgba(0,0,0,0.1);
+      }
+    }
   }
 }

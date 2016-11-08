@@ -4,6 +4,7 @@ import {
   SET_ZONE_FALSE,
   SET_RAW_LOCATION,
   SET_WAITING_EVAL,
+  SET_NEARBY_SHELTERS,
 } from '../actions/mapStatus';
 
 const initialState = {
@@ -18,6 +19,7 @@ const initialState = {
     type: null,
   },
   waitingEval: false,
+  nearbyShelters: [],
 };
 
 export default function(state = initialState, action = {}) {
@@ -54,7 +56,12 @@ export default function(state = initialState, action = {}) {
     case SET_WAITING_EVAL:
       return {
         ...state,
-        watingEval: action.waiting
+        watingEval: action.waiting,
+      };
+    case SET_NEARBY_SHELTERS:
+      return {
+        ...state,
+        nearbyShelters: action.shelters,
       };
     default:
       return state;

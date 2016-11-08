@@ -1,14 +1,16 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { inside } from '@turf/turf';
+import { inside, distance } from '@turf/turf';
 import {
   setInZone,
   setRawLocation,
+  setNearby,
 } from '../../actions/mapStatus';
 import { getZones } from '../../actions/zones';
 import { getShelters } from '../../actions/shelters';
 import mapStyle from '../../utils/mapStyle.js';
 import style from './style.css';
+import evacImg from '../../assets/img/evac.svg';
 
 class Map extends Component {
   static propTypes = {
@@ -18,6 +20,7 @@ class Map extends Component {
     zones: PropTypes.object.isRequired,
     setInZone: PropTypes.func.isRequired,
     setRawLocation: PropTypes.func.isRequired,
+    setNearby: PropTypes.func.isRequired,
     getZones: PropTypes.func.isRequired,
     getShelters: PropTypes.func.isRequired,
   }
@@ -25,7 +28,9 @@ class Map extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      map: null
+      map: null,
+      dragging: false,
+      programaticShift: false,
     };
   }
 
@@ -41,7 +46,7 @@ class Map extends Component {
       this.addZonesToMap(nextZones.locations);
     }
     if (nextCenter !== center) {
-      this.shiftCenter(nextCenter);
+      this.shiftCenter(nextCenter, true);
     }
   }
 
@@ -86,6 +91,7 @@ class Map extends Component {
       const marker = new google.maps.Marker({
         position: googCoords,
         title: shelter.properties.ec_name,
+        icon: evacImg,
       });
       marker.setMap(this.mapView);
     }
@@ -100,17 +106,17 @@ class Map extends Component {
       const level = feature.getProperty('hurricane');
       let fill;
       if (level === '1') {
-        fill = '#2F0B3C';
+        fill = '#2F002E';
       } else if (level === '2') {
         fill = '#09355B';
       } else if (level === '3') {
-        fill = '#1D719D';
+        fill = '#1D9D8F';
       } else if (level === '4') {
-        fill = '#4F80C5';
+        fill = '#7768D7';
       } else if (level === '5') {
-        fill = '#7FB6F3';
+        fill = '#8EBDF0';
       } else if (level === '6') {
-        fill = '#C9EDFF';
+        fill = '#C9FFF9';
       }
       return ({
         visible: !(level === '0' || level === 'X'),
@@ -122,7 +128,10 @@ class Map extends Component {
     });
   }
 
-  shiftCenter(center) {
+  shiftCenter(center, programaticShift = false) {
+    this.setState({
+      programaticShift
+    });
     const google = window.google;
     const googCords = new google.maps.LatLng(center.lat, center.long);
     this.mapView.panTo(googCords);
@@ -151,15 +160,11 @@ class Map extends Component {
           true,
           zone.properties.hurricane
         );
+        this.determineDistance(latitude, longitude);
         return;
       }
     }
     this.props.setInZone(false);
-  }
-
-  handleCenterChange() {
-    const currentCenter = this.mapView.getCenter();
-    this.centerMarker.setPosition(currentCenter);
   }
 
   mountMaps() {
@@ -175,6 +180,31 @@ class Map extends Component {
       };
       document.body.appendChild(mapScript);
     }
+  }
+
+  determineDistance(lat, lng) {
+    const { shelters } = this.props;
+    const currentLocation = {
+      type: 'Feature',
+      properties: {},
+      geometry: {
+        type: 'Point',
+        coordinates: [lng, lat]
+      }
+    };
+    const distanceArray = shelters.locations.map((location) => {
+      location.properties.distance = distance(
+        currentLocation,
+        location,
+        'miles'
+      );
+      return location;
+    });
+    distanceArray.sort((a, b) => {
+      return a.properties.distance - b.properties.distance;
+    });
+    distanceArray.splice(3);
+    this.props.setNearby(distanceArray);
   }
 
   initMap() {
@@ -209,11 +239,6 @@ class Map extends Component {
       center.lng,
     );
 
-    this.centerMarker = new google.maps.Marker({
-      postition: startCenter,
-      map: mapView,
-    });
-
     // Google Maps View Events
     let centerTimeout;
     let prevCenter = {
@@ -221,17 +246,35 @@ class Map extends Component {
       lng: center.lng,
     };
     google.maps.event.addListener(mapView, 'center_changed', () => {
-      this.handleCenterChange();
       clearTimeout(centerTimeout);
       centerTimeout = setTimeout(() => {
+        const { programaticShift } = this.state;
         const lat = this.mapView.getCenter().lat();
         const lng = this.mapView.getCenter().lng();
         if (prevCenter !== { lat, lng }) {
           prevCenter = { lat, lng };
-          this.setMapAddress(lat, lng);
+          if (!programaticShift) {
+            this.setMapAddress(lat, lng);
+          } else {
+            this.setState({
+              programaticShift: false,
+            });
+          }
           this.zoneCheck(lat, lng);
         }
       }, 600);
+    });
+
+    google.maps.event.addListener(mapView, 'dragstart', () => {
+      this.setState({
+        dragging: true,
+      });
+    });
+
+    google.maps.event.addListener(mapView, 'dragend', () => {
+      this.setState({
+        dragging: false,
+      });
     });
 
     window.addEventListener('resize', () => {
@@ -242,10 +285,11 @@ class Map extends Component {
   }
 
   render() {
+    const { dragging } = this.state;
     return (
       <div className={style.mapContainer}>
         <div
-          className={style.mapView}
+          className={`${style.mapView} ${dragging ? style.active : ''}`}
           id='map'
         />
       </div>
@@ -269,6 +313,9 @@ function mapDispatchToProps(dispatch) {
     },
     setRawLocation: (string, type) => {
       dispatch(setRawLocation(string, type));
+    },
+    setNearby: (shelters) => {
+      dispatch(setNearby(shelters));
     },
     getZones: () => {
       dispatch(getZones());

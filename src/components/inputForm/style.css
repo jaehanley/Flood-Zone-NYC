@@ -29,7 +29,7 @@
 
 .searchContainer {
   position: fixed;
-  top: 10px;
+  top: 20px;
   left: 0;
   width: 100%;
   padding: 0 10px;
@@ -40,21 +40,82 @@
   }
 }
 
+.locationStatus,
+.shelters {
+  width: 90%;
+  margin: 0 auto;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
 .locationStatus {
   padding: 9px 10px;
   color: #4b4b4b;
   font-weight: 600;
   font-size: 14px;
-  width: 90%;
   background-color: #e3e3e3;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
   border-radius: 0 0 4px 4px;
-  margin: 0 auto;
   transition: all 0.2s;
 
   &.activeZone {
     color: #fff;
     background-color: #222;
+    border-radius: 0;
+  }
+}
+
+.shelters {
+  background-color: #f9f9f9;
+  border-radius: 0 0 4px 4px;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+
+  .shelter:last-of-type {
+    border-bottom: 0 none;
+  }
+}
+
+.shelter {
+  display: flex;
+  border-bottom: solid 1px #bbb;
+  height: 60px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.directions {
+  width: 60px;
+  height: 100%;
+  background-image: url('../../assets/img/navigate-to.svg');
+  background-position: center center;
+  background-repeat: no-repeat;
+  display: block;
+}
+
+.shelterInfo {
+  padding: 0 10px;
+  flex: 1;
+
+  b,
+  i,
+  span {
+    display: block;
+  }
+
+  b {
+    color: #222;
+    font-size: 15px;
+  }
+
+  i {
+    color: #424242;
+    font-size: 14px;
+    font-style: normal;
+  }
+
+  span {
+    color: #555;
+    font-size: 12px;
   }
 }
 
@@ -77,7 +138,7 @@
     border-right: solid 1px #f1f1f1;
     color: #4d4d4d;
     text-align: center;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 500;
     border-radius: 0;
 

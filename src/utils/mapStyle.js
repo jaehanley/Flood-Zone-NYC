@@ -3,13 +3,7 @@ export default [
     featureType: 'landscape',
     stylers: [
       {
-        saturation: -100
-      },
-      {
-        lightness: 65
-      },
-      {
-        visibility: 'on'
+        color: '#EAEAEA'
       }
     ],
   },
