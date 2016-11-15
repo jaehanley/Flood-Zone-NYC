@@ -38,6 +38,7 @@ class InputForm extends Component {
       const lat = pos.coords.latitude;
       const lng = pos.coords.longitude;
       const google = window.google;
+      const { ga, mixpanel } = window;
       const fallbackLocation = () => {
         this.props.setRawLocation(
           `${lat}, ${lng}`,
@@ -68,6 +69,12 @@ class InputForm extends Component {
         fallbackLocation();
       }
       this.props.setCenter(lat, lng);
+      if (ga) {
+        ga('send', 'event', 'button', 'submit', 'found address by location');
+      }
+      if (mixpanel) {
+        mixpanel.track('found address by location');
+      }
     });
   }
 
@@ -76,6 +83,7 @@ class InputForm extends Component {
     this.mapInput.blur();
     const address = this.mapInput.value;
     const google = window.google;
+    const { ga, mixpanel } = window;
     if (google) {
       // eslint-disable-next-line new-parens
       const geocoder = new google.maps.Geocoder;
@@ -90,6 +98,12 @@ class InputForm extends Component {
           this.props.setCenter(lat, lng);
         }
       });
+    }
+    if (ga) {
+      ga('send', 'event', 'input', 'submit', 'found address by text input');
+    }
+    if (mixpanel) {
+      mixpanel.track('found address by text input');
     }
   }
 
@@ -120,11 +134,28 @@ class InputForm extends Component {
 
   fillInput() {
     const { previousInput } = this.state;
+    const { ga, mixpanel } = window;
     if (this.mapInput.value === '') {
       this.mapInput.value = previousInput;
       this.setState({
         processedInput: true,
       });
+      if (ga) {
+        ga('send', 'event', 'input', 'refocus', 'address bar');
+      }
+      if (mixpanel) {
+        mixpanel.track('refocused address input');
+      }
+    }
+  }
+
+  handleDirections() {
+    const { ga, mixpanel } = window;
+    if (ga) {
+      ga('send', 'event', 'link', 'click', 'directions to shelter');
+    }
+    if (mixpanel) {
+      mixpanel.track('clicked directions to shelter');
     }
   }
 
@@ -212,6 +243,7 @@ class InputForm extends Component {
                           ? `http://maps.apple.com/?daddr=${coords[1]},${coords[0]}&saddr=${center.lat},${center.long}`
                           : `https://maps.google.com/?daddr=${coords[1]},${coords[0]}&saddr=${center.lat},${center.long}`
                         }
+                        onClick={this.handleDirections.bind(this)}
                         rel='noopener noreferrer'
                         target='_blank'
                       />

@@ -210,8 +210,8 @@ class Map extends Component {
   }
 
   initMap() {
-    const google = window.google;
     const { center } = this.props;
+    const { ga, mixpanel, google } = window;
     const startCenter = new google.maps.LatLng(
       center.lat,
       center.lng
@@ -279,6 +279,12 @@ class Map extends Component {
         dragging: false,
         programaticShift: false,
       });
+      if (ga) {
+        ga('send', 'event', 'map', 'drag');
+      }
+      if (mixpanel) {
+        mixpanel.track('user dragged map');
+      }
     });
 
     window.addEventListener('resize', () => {

@@ -4,7 +4,7 @@
   "description": "A validator tool for Brightcove Players",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --inline --hot --host 0.0.0.0",
+    "start": "webpack-dev-server --inline --hot --https --host 0.0.0.0",
     "build": "rm -rf dist && NODE_ENV=production webpack -p"
   },
   "keywords": [
@@ -68,6 +68,7 @@
     "eslint-plugin-import": "1.13.0",
     "eslint-plugin-jsx-a11y": "2.1.0",
     "eslint-plugin-react": "6.1.2",
-    "stylelint": "7.1.0"
+    "stylelint": "7.1.0",
+    "webpack-assets-manifest": "0.6.1"
   }
 }

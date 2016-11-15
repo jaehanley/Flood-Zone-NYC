@@ -1,46 +1,44 @@
 {
-  "name": "Flood Zone NYC",
-  "short_name": "Flood Zone",
   "description": "Map of New York City Flood Zones as well as information about evacuation centers",
-  "icons": [
-    {
-      "src": "<%= require('./img/icon-36.png') %>",
-      "sizes": "36x36",
-      "type": "image/png",
-      "density": 0.75
-    },
-    {
-      "src": "<%= require('./img/icon-48.png') %>",
-      "sizes": "48x48",
-      "type": "image/png",
-      "density": 1
-    },
-    {
-      "src": "<%= require('./img/icon-72.png') %>",
-      "sizes": "72x72",
-      "type": "image/png",
-      "density": 1.5
-    },
-    {
-      "src": "<%= require('./img/icon-96.png') %>",
-      "sizes": "96x96",
-      "type": "image/png",
-      "density": 2
-    },
-    {
-      "src": "<%= require('./img/icon-144.png') %>",
-      "sizes": "144x144",
-      "type": "image/png",
-      "density": 3
-    },
-    {
-      "src": "<%= require('./img/icon-192.png') %>",
-      "sizes": "192x192",
-      "type": "image/png",
-      "density": 4
-    }
-  ],
-  "start_url": "/",
   "display": "fullscreen",
-  "orientation": "portrait"
+  "favicon.ico": "6e8d715222fa3b16b737417459d8688a.ico",
+  "icon-114.png": "2554d2eb1a207ea8b4cf2daa030510ae.png",
+  "icon-144.png": "0a923cba3d013d0b64903f0af4434ab4.png",
+  "icon-167.png": "09f2692425ffa0746701942d0d49df91.png",
+  "icon-192.png": "888445296dbda3b9c4c70d9104bec795.png",
+  "icon-36.png": "04a35ca97fcec88bc2da8d64cde058de.png",
+  "icon-48.png": "6d94788cd21764ed0ffd323a26a916c2.png",
+  "icon-57.png": "b62d63d4c25dfc7738ae1200f77e625a.png",
+  "icon-60.png": "8e90be09d484ac1a2a201ac51aec3039.png",
+  "icon-60@2x.png": "b8cfa0b94691c74c9dd381966835c236.png",
+  "icon-60@3x.png": "7eb3768729e29251f9635f2ff487f9ac.png",
+  "icon-72.png": "28d5fe6058469fc7e109c167518bc4b1.png",
+  "icon-76.png": "7c77ad9aaaf8b8c239b8b2b8ab583982.png",
+  "icon-76@2x.png": "e11ec03f00cea45cf5f7d1e919e5add7.png",
+  "icon-96.png": "0522cf5ee04aa1ad47e5b946967a24dd.png",
+  "ipad-landscape-splash.png": "b8a037d7f5c0faae5fb9eecf258caa19.png",
+  "ipad-landscape-splash@2x.png": "c63b9616bc2622051d8a24600b43bd04.png",
+  "ipad-portrait-splash.png": "58acd70573f80095b3100f4e731f2136.png",
+  "ipad-portrait-splash@2x.png": "644a9cf95dd399f7a099126140519c1a.png",
+  "ipad-pro-landscape-splash.png": "428157801e80bb78f18c0f13ad705f4b.png",
+  "ipad-pro-portrait-splash.png": "580c9d01bb21e2a7f12fb34a6af07e08.png",
+  "iphone-7-plus-landscape-splash.png": "052321a6236e61dfca7580af9e0b467a.png",
+  "iphone-7-plus-splash.png": "46f73b63d8d4cafbfd58ce0bdf824c13.png",
+  "iphone-7-splash.png": "71132553f5939dc1057a41f30c18d97a.png",
+  "iphone-se-splash.png": "6026591c7620ee005a60aa5df6cdb38c.png",
+  "iphone-splash.png": "da19446c584bf19feb0607609a180c0a.png",
+  "iphone-splash@2x.png": "a574334df23036780be0c971089f71f2.png",
+  "location.svg": "f2abc555eb31a0a80f51d48fa5fa8114.svg",
+  "main.js": "bundle.js",
+  "main.js.map": "bundle.js.map",
+  "manifest.json": "503bd928ec3ee748b325dcca7be45f80.json",
+  "marker.svg": "460472495ef0bf8b7fff626550d2ba58.svg",
+  "name": "Flood Zone NYC",
+  "navigate-to-active.svg": "bfa8704a5d7a5adfc41c91e9e9bd574a.svg",
+  "navigate-to.svg": "e05d01f6a2bca6cb07b06e3ecf888aa6.svg",
+  "og-image.jpg": "794c2b0ebac7ad30b49fad33578da9c6.jpg",
+  "orientation": "portrait",
+  "shelter.svg": "243f2a8c8a241cf2ebfc66ff44fdd16f.svg",
+  "short_name": "Flood Zone",
+  "start_url": "/"
 }

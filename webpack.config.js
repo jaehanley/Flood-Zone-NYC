@@ -4,6 +4,7 @@ var webpack = require('webpack');
 var autoprefixer = require('autoprefixer');
 var postcssImport = require('postcss-import');
 var postcssCalc = require('postcss-calc');
+var WebpackAssetsManifest = require('webpack-assets-manifest');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 var env = process.env.NODE_ENV || 'development';
@@ -35,7 +36,7 @@ var config = {
         loader: 'style!css?modules&importLoaders=1&localIdentName=' + cssModuleIdentName + '!postcss'
       },
       {
-        test: /\.(mp4|webm|ogv|png|jpg|webp|svg)$/,
+        test: /\.(mp4|webm|ogv|png|jpg|webp|svg|ico)$/,
         loader: 'file',
         include: [path.join(__dirname, 'src')]
       },
@@ -84,6 +85,11 @@ var config = {
     }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(env)
+    }),
+    new WebpackAssetsManifest({
+      output: './src/assets/manifest.json',
+      merge: true,
+      writeToDisk: true,
     })
   ]
 };
