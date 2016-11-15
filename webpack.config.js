@@ -35,13 +35,13 @@ var config = {
         loader: 'style!css?modules&importLoaders=1&localIdentName=' + cssModuleIdentName + '!postcss'
       },
       {
-        test: /\.svg$/,
+        test: /\.(mp4|webm|ogv|png|jpg|webp|svg)$/,
         loader: 'file',
         include: [path.join(__dirname, 'src')]
       },
       {
-        test: /\.(mp4|webm|ogv)$/,
-        loader: 'file',
+        test: /\.json/,
+        loader: 'file!json',
         include: [path.join(__dirname, 'src')]
       }
     ]

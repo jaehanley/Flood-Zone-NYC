@@ -102,12 +102,19 @@ class InputForm extends Component {
 
   clearInput() {
     const { processedInput } = this.state;
+    const { ga, mixpanel } = window;
     if (processedInput) {
       this.setState({
         previousInput: this.mapInput.value,
         processedInput: false,
       });
       this.mapInput.value = '';
+    }
+    if (ga) {
+      ga('send', 'event', 'input', 'focus', 'address bar');
+    }
+    if (mixpanel) {
+      mixpanel.track('focused address input');
     }
   }
 
@@ -139,7 +146,7 @@ class InputForm extends Component {
       outputMessage = `In evac zone ${containedIn} - nearby shelters`;
     }
     return (
-      <div className={iosApp ? style.inAppMode : style.webMode}>
+      <div className={iosApp ? style.inAppMode : style.webMode} aria-level='1'>
         <div className={style.searchContainer}>
           <div className={style.topView}>
             <div className={style.inputContainer}>
@@ -180,26 +187,35 @@ class InputForm extends Component {
             </div>
             {inZone && (
               <div className={style.shelters}>
-                {nearbyShelters.map((shelter) => {
+                {nearbyShelters.map((shelter, index) => {
                   const props = shelter.properties;
                   const coords = shelter.geometry.coordinates;
                   return (
-                    <div className={style.shelter}>
+                    <div
+                      className={style.shelter}
+                      key={index}
+                    >
                       <div className={style.shelterInfo}>
-                        <b>{props.address}</b>
-                        <i>{props.city}, {props.state} {parseInt(props.zip_code, 10)}</i>
-                        <span>{props.distance.toFixed(2)}mi</span>
+                        <b className={style.streetAddress}>{props.address}</b>
+                        {/* eslint-disable max-len */}
+                        <i className={style.district}>{props.city}, {props.state} {parseInt(props.zip_code, 10)}</i>
+                        <span className={style.distance} aria-label='distance'>
+                          {props.distance.toFixed(2)} <span aria-label='miles'><span aria-hidden>mi</span></span>
+                        </span>
+                        {/* eslint-enable max-len */}
                       </div>
+                      {/* eslint-disable max-len */}
                       <a
-                        aria-label='get directions'
+                        aria-label={`get directions to shelter at ${props.address} ${props.city}, ${props.state}`}
                         className={style.directions}
                         href={ios
-                          ? `http://maps.apple.com/?daddr=${coords[1]},${coords[0]}&saddr=${center.lat},${center.lng}`
-                          : `https://www.google.com/maps/dir/${center.lat},${center.lng}/${coords[1]},${coords[0]}`
+                          ? `http://maps.apple.com/?daddr=${coords[1]},${coords[0]}&saddr=${center.lat},${center.long}`
+                          : `https://maps.google.com/?daddr=${coords[1]},${coords[0]}&saddr=${center.lat},${center.long}`
                         }
                         rel='noopener noreferrer'
                         target='_blank'
                       />
+                      {/* eslint-enable max-len */}
                     </div>
                   );
                 })}

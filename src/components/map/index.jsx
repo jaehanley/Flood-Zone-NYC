@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { inside, distance } from '@turf/turf';
 import {
+  setCenter,
   setInZone,
   setRawLocation,
   setNearby,
@@ -10,7 +11,7 @@ import { getZones } from '../../actions/zones';
 import { getShelters } from '../../actions/shelters';
 import mapStyle from '../../utils/mapStyle.js';
 import style from './style.css';
-import evacImg from '../../assets/img/evac.svg';
+import evacImg from '../../assets/img/shelter.svg';
 
 class Map extends Component {
   static propTypes = {
@@ -18,6 +19,7 @@ class Map extends Component {
     center: PropTypes.object.isRequired,
     shelters: PropTypes.object.isRequired,
     zones: PropTypes.object.isRequired,
+    setCenter: PropTypes.func.isRequired,
     setInZone: PropTypes.func.isRequired,
     setRawLocation: PropTypes.func.isRequired,
     setNearby: PropTypes.func.isRequired,
@@ -223,7 +225,7 @@ class Map extends Component {
         disableDefaultUI: true,
         zoomControl: true,
         zoomControlOptions: {
-          position: google.maps.ControlPosition.LEFT_CENTER
+          position: google.maps.ControlPosition.LEFT_BOTTOM
         },
         panControl: false,
         mapTypeId: 'roadmap',
@@ -260,6 +262,7 @@ class Map extends Component {
               programaticShift: false,
             });
           }
+          this.props.setCenter(lat, lng);
           this.zoneCheck(lat, lng);
         }
       }, 600);
@@ -274,6 +277,7 @@ class Map extends Component {
     google.maps.event.addListener(mapView, 'dragend', () => {
       this.setState({
         dragging: false,
+        programaticShift: false,
       });
     });
 
@@ -316,6 +320,9 @@ function mapDispatchToProps(dispatch) {
     },
     setNearby: (shelters) => {
       dispatch(setNearby(shelters));
+    },
+    setCenter: (lat, long) => {
+      dispatch(setCenter(lat, long));
     },
     getZones: () => {
       dispatch(getZones());

@@ -90,30 +90,40 @@
   background-position: center center;
   background-repeat: no-repeat;
   display: block;
+
+  &:hover,
+  &:focus {
+    background-image: url('../../assets/img/navigate-to-active.svg');
+  }
+
+  &:focus {
+    outline: 0 none;
+    box-shadow: inset 0 0 3px 3px rgba(68,156,248,0.8);
+  }
 }
 
 .shelterInfo {
   padding: 0 10px;
   flex: 1;
 
-  b,
-  i,
-  span {
+  .streetAddress,
+  .district,
+  .distance {
     display: block;
   }
 
-  b {
+  .streetAddress {
     color: #222;
     font-size: 15px;
   }
 
-  i {
+  .district {
     color: #424242;
     font-size: 14px;
     font-style: normal;
   }
 
-  span {
+  .distance {
     color: #555;
     font-size: 12px;
   }
@@ -141,6 +151,7 @@
     font-size: 16px;
     font-weight: 500;
     border-radius: 0;
+    padding: 0 10px;
 
     &:focus {
       background-color: #fcfcfc;
@@ -154,6 +165,7 @@
 
     &:focus {
       outline: 0 none;
+      box-shadow: inset 0 0 3px 3px rgba(68,156,248,0.8);
     }
   }
 }
