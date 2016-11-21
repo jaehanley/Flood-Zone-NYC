@@ -176,7 +176,7 @@ class Map extends Component {
       mapScript.async = true;
       mapScript.defer = true;
       // eslint-disable-next-line max-len
-      mapScript.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBV8YGyqSOPSK428_DvRl3c-9Afv_j46Jg';
+      mapScript.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NODE_ENV === 'production' ? 'AIzaSyBV8YGyqSOPSK428_DvRl3c-9Afv_j46Jg' : 'AIzaSyDyX2shnNNuGz00rDCLioNsXOYA1RFMV4M'}`;
       mapScript.onload = () => {
         this.initMap();
       };
