@@ -7,6 +7,7 @@ import {
   setRawLocation,
   setNearby,
 } from '../../actions/mapStatus';
+import AdSlot from '../adSlot';
 import { getZones } from '../../actions/zones';
 import { getShelters } from '../../actions/shelters';
 import mapStyle from '../../utils/mapStyle.js';
@@ -25,6 +26,8 @@ class Map extends Component {
     setNearby: PropTypes.func.isRequired,
     getZones: PropTypes.func.isRequired,
     getShelters: PropTypes.func.isRequired,
+    firstfound: PropTypes.bool.isRequired,
+    hideAd: PropTypes.bool.isRequired,
   }
 
   constructor(props) {
@@ -296,12 +299,16 @@ class Map extends Component {
 
   render() {
     const { dragging } = this.state;
+    const { firstfound, hideAd } = this.props;
     return (
       <div className={style.mapContainer}>
         <div
           className={`${style.mapView} ${dragging ? style.active : ''}`}
           id='map'
         />
+        {(firstfound && !hideAd) && (
+          <AdSlot />
+        )}
       </div>
     );
   }
@@ -313,6 +320,8 @@ function mapStateToProps(state) {
     center: state.mapStatus.center,
     shelters: state.shelters,
     zones: state.zones,
+    firstfound: state.mapStatus.firstfound,
+    hideAd: state.mapStatus.hideAd,
   };
 }
 

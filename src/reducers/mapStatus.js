@@ -5,6 +5,8 @@ import {
   SET_RAW_LOCATION,
   SET_WAITING_EVAL,
   SET_NEARBY_SHELTERS,
+  HIDE_AD,
+  SHOW_AD,
 } from '../actions/mapStatus';
 
 const initialState = {
@@ -20,6 +22,8 @@ const initialState = {
   },
   waitingEval: false,
   nearbyShelters: [],
+  firstfound: false,
+  hideAd: false,
 };
 
 export default function(state = initialState, action = {}) {
@@ -30,7 +34,8 @@ export default function(state = initialState, action = {}) {
         center: {
           lat: action.lat,
           long: action.long,
-        }
+        },
+        firstfound: true
       };
     case SET_ZONE_TRUE:
       return {
@@ -51,7 +56,7 @@ export default function(state = initialState, action = {}) {
         rawLocation: {
           string: action.string,
           type: action.stringType,
-        }
+        },
       };
     case SET_WAITING_EVAL:
       return {
@@ -62,6 +67,16 @@ export default function(state = initialState, action = {}) {
       return {
         ...state,
         nearbyShelters: action.shelters,
+      };
+    case HIDE_AD:
+      return {
+        ...state,
+        hideAd: true,
+      };
+    case SHOW_AD:
+      return {
+        ...state,
+        hideAd: false,
       };
     default:
       return state;
