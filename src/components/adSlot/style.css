@@ -1,3 +1,14 @@
+@keyframes intro {
+  from {
+    transform: translate(-50%,150px);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%,0px);
+    opacity: 1;
+  }
+}
+
 .adContainer {
   position: fixed;
   bottom: 26px;
@@ -5,6 +16,8 @@
   transform: translateX(-50%);
   background-color: #fff;
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  animation-duration: 0.3s;
+  animation-name: intro;
 }
 
 .adLabel {
