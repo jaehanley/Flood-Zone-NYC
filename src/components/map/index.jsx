@@ -301,10 +301,11 @@ class Map extends Component {
     const { dragging } = this.state;
     const { firstfound, hideAd } = this.props;
     return (
-      <div className={style.mapContainer}>
+      <div className={style.mapContainer} aria-level='2'>
         <div
           className={`${style.mapView} ${dragging ? style.active : ''}`}
           id='map'
+          aria-level='2'
         />
         {(firstfound && !hideAd) && (
           <AdSlot />

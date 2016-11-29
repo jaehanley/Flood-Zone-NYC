@@ -89,7 +89,7 @@ class adSlot extends Component {
 
   render() {
     return (
-      <div className={style.adContainer}>
+      <div className={style.adContainer} aria-level='1'>
         <div id='div-gpt-ad-1480280944211-0' />
         <div className={style.adLabel}>
           <b>Advertising</b>
