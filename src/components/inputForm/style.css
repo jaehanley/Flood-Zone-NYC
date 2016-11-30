@@ -1,3 +1,12 @@
+@keyframes transitionIn {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
 .searchContainer,
 .inputContainer,
 .topView {
@@ -9,6 +18,8 @@
   border-radius: 4px;
   flex-direction: column;
   text-align: center;
+  overflow: hidden;
+  padding-bottom: 10px;
   @media screen and (min-width: 600px) {
     max-width: 560px;
   }
@@ -55,6 +66,7 @@
   background-color: #e3e3e3;
   border-radius: 0 0 4px 4px;
   transition: all 0.2s;
+  z-index: 2;
 
   &.activeZone {
     color: #fff;
@@ -64,6 +76,8 @@
 }
 
 .shelters {
+  animation-name: transitionIn;
+  animation-duration: 0.3s;
   background-color: #f9f9f9;
   border-radius: 0 0 4px 4px;
   display: flex;
@@ -135,7 +149,7 @@
   border-radius: 4px;
   overflow: hidden;
   box-shadow: 0 1px 5px rgba(0,0,0,0.2);
-  z-index: 1;
+  z-index: 2;
 
   form {
     flex: 1 0;

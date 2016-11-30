@@ -1,6 +1,6 @@
 @keyframes intro {
   from {
-    transform: translate(-50%,150px);
+    transform: translate(-50%,-150px);
     opacity: 0;
   }
   to {
