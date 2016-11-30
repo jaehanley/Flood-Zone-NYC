@@ -10,6 +10,21 @@ class adSlot extends Component {
     hideAd: PropTypes.func.isRequired,
   };
 
+  constructor(props) {
+    super(props);
+    const { innerWidth } = window;
+    let size = 'mobile';
+    if (innerWidth >= 738) {
+      size = 'tablet';
+    }
+    if (innerWidth >= 980) {
+      size = 'desktop';
+    }
+    this.state = {
+      size,
+    };
+  }
+
   componentDidMount() {
     const { googletag, ga, mixpanel } = window;
     if (googletag) {
@@ -30,7 +45,7 @@ class adSlot extends Component {
         googletag.pubads().enableSingleRequest();
         googletag.enableServices();
         googletag.display('div-gpt-ad-1480280944211-0');
-        this.refreshAd();
+        window.setInterval(this.refreshAd, 60000);
         if (ga) {
           ga('send', 'event', 'ad', 'load', 'ad fetched');
         }
@@ -38,6 +53,7 @@ class adSlot extends Component {
           mixpanel.track('ad loaded');
         }
       });
+      window.addEventListener('resize', this.resizeAd.bind(this));
     }
   }
 
@@ -48,6 +64,7 @@ class adSlot extends Component {
         googletag.destroySlots([this.slot]);
       });
       clearInterval(this.refreshAd);
+      window.removeEventListener('resize', this.resizeAd);
     }
     if (ga) {
       ga('send', 'event', 'button', 'click', 'hide ad');
@@ -58,29 +75,56 @@ class adSlot extends Component {
   }
 
   refreshAd() {
-    setInterval(() => {
-      const { googletag, ga, mixpanel } = window;
-      const refreshFunc = () => {
-        if (googletag) {
-          googletag.cmd.push(() => {
-            googletag.pubads().refresh([this.slot]);
-            if (ga) {
-              ga('send', 'event', 'ad', 'refresh', 'ad refreshed');
-            }
-            if (mixpanel) {
-              mixpanel.track('ad refreshed');
-            }
-          });
-        }
-      };
-      if ('hidden' in document) {
-        if (!document.hidden) {
-          refreshFunc();
-        }
-      } else {
+    const { googletag, ga, mixpanel } = window;
+    const refreshFunc = () => {
+      if (googletag) {
+        googletag.cmd.push(() => {
+          googletag.pubads().refresh([this.slot]);
+          if (ga) {
+            ga('send', 'event', 'ad', 'refresh', 'ad refreshed');
+          }
+          if (mixpanel) {
+            mixpanel.track('ad refreshed');
+          }
+        });
+      }
+    };
+    if ('hidden' in document) {
+      if (!document.hidden) {
         refreshFunc();
       }
-    }, 60000);
+    } else {
+      refreshFunc();
+    }
+  }
+
+  resizeAd() {
+    const { googletag, ga, mixpanel } = window;
+    const { innerWidth } = window;
+    const { size } = this.state;
+    let currentSize = 'mobile';
+    if (innerWidth >= 738) {
+      currentSize = 'tablet';
+    }
+    if (innerWidth >= 980) {
+      currentSize = 'desktop';
+    }
+    if (size !== currentSize) {
+      clearInterval(this.refreshAd);
+      this.refreshAd();
+      window.setInterval(this.refreshAd, 60000);
+      if (googletag.pubads) {
+        if (ga) {
+          ga('send', 'event', 'ad', 'resize', 'ad resized');
+        }
+        if (mixpanel) {
+          mixpanel.track('ad resized');
+        }
+      }
+      this.setState({
+        size: currentSize,
+      });
+    }
   }
 
   closeAd() {
