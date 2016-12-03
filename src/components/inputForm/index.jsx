@@ -192,6 +192,7 @@ class InputForm extends Component {
                   defaultValue={rawLocation.string || ''}
                   onFocus={this.clearInput.bind(this)}
                   onBlur={this.fillInput.bind(this)}
+                  tabIndex='1'
                 />
               </form>
               {(window && 'geolocation' in window.navigator) && (
@@ -202,6 +203,7 @@ class InputForm extends Component {
                     backgroundImage: `url(${locationBtn})`
                   }}
                   onClick={this.getGeolocation.bind(this)}
+                  tabIndex='1'
                 />
               )}
             </div>
@@ -231,7 +233,7 @@ class InputForm extends Component {
                         {/* eslint-disable max-len */}
                         <i className={style.district}>{props.city}, {props.state} {parseInt(props.zip_code, 10)}</i>
                         <span className={style.distance} aria-label='distance'>
-                          {props.distance.toFixed(2)} <span aria-label='miles'><span aria-hidden>mi</span></span>
+                          {props.distance.toFixed(2)} <abbr title='miles'>mi</abbr>
                         </span>
                         {/* eslint-enable max-len */}
                       </div>
@@ -246,6 +248,7 @@ class InputForm extends Component {
                         onClick={this.handleDirections.bind(this)}
                         rel='noopener noreferrer'
                         target='_blank'
+                        tabIndex='1'
                       />
                       {/* eslint-enable max-len */}
                     </div>
