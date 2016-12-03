@@ -177,7 +177,11 @@ class InputForm extends Component {
       outputMessage = `In evac zone ${containedIn} - nearby shelters`;
     }
     return (
-      <div className={iosApp ? style.inAppMode : style.webMode} aria-level='1'>
+      <div
+        className={iosApp ? style.inAppMode : style.webMode}
+        aria-level='1'
+        role='heading'
+      >
         <div className={style.searchContainer}>
           <div className={style.topView}>
             <div className={style.inputContainer}>
