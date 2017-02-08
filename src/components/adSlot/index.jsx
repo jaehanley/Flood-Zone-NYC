@@ -45,7 +45,6 @@ class adSlot extends Component {
         googletag.pubads().enableSingleRequest();
         googletag.enableServices();
         googletag.display('div-gpt-ad-1480280944211-0');
-        window.setInterval(this.refreshAd, 60000);
         if (ga) {
           ga('send', 'event', 'ad', 'load', 'ad fetched');
         }
@@ -63,7 +62,6 @@ class adSlot extends Component {
       googletag.cmd.push(() => {
         googletag.destroySlots([this.slot]);
       });
-      clearInterval(this.refreshAd);
       window.removeEventListener('resize', this.resizeAd);
     }
     if (ga) {
@@ -110,9 +108,7 @@ class adSlot extends Component {
       currentSize = 'desktop';
     }
     if (size !== currentSize) {
-      clearInterval(this.refreshAd);
       this.refreshAd();
-      window.setInterval(this.refreshAd, 60000);
       if (googletag.pubads) {
         if (ga) {
           ga('send', 'event', 'ad', 'resize', 'ad resized');
