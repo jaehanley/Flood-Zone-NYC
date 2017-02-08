@@ -1,7 +1,7 @@
 {
-  "name": "bc-player-validator",
+  "name": "flood-zone-nyc",
   "version": "1.0.0",
-  "description": "A validator tool for Brightcove Players",
+  "description": "A tool for NYC hurricane evacuation zones",
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --inline --hot --https --host 0.0.0.0",
