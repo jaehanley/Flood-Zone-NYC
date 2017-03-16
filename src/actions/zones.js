@@ -12,7 +12,7 @@ export function getZones() {
       ZONES_FAILURE,
     ],
     // eslint-disable-next-line
-    request: () => getJSON('https://data.cityofnewyork.us/api/geospatial/uihr-hn7s?method=export&format=GeoJSON'),
+    request: () => getJSON('https://data.cityofnewyork.us/resource/rb3k-upyb.json'),
     shouldRequest: (state) => {
       return state.zones.locations.length === 0;
     }

@@ -21,7 +21,7 @@ export default function(state = initialState, action = {}) {
     case ZONES_RECEIVED:
       return {
         ...state,
-        locations: modelZones(action.response.features),
+        locations: modelZones(action.response),
         loading: false,
       };
     case ZONES_FAILURE:

@@ -20,7 +20,7 @@ export default function(state = initialState, action = {}) {
     case SHELTERS_RECEIVED:
       return {
         ...state,
-        locations: action.response.features,
+        locations: action.response,
         loading: false,
       };
     case SHELTERS_FAILURE:

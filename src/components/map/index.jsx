@@ -91,11 +91,11 @@ class Map extends Component {
     const google = window.google;
     for (let i = 0; i < shelters.length; i++) {
       const shelter = shelters[i];
-      const coords = shelter.geometry.coordinates;
+      const coords = shelter.the_geom.coordinates;
       const googCoords = new google.maps.LatLng(coords[1], coords[0]);
       const marker = new google.maps.Marker({
         position: googCoords,
-        title: shelter.properties.ec_name,
+        title: shelter.ec_name,
         icon: evacImg,
       });
       marker.setMap(this.mapView);
@@ -105,7 +105,16 @@ class Map extends Component {
   addZonesToMap(zones) {
     for (let i = 0; i < zones.length; i++) {
       const zone = zones[i];
-      this.mapView.data.addGeoJson(zone);
+      this.mapView.data.addGeoJson({
+        type: 'FeatureCollection',
+        features: [{
+          type: 'Feature',
+          properties: {
+            hurricane: zone.hurricane,
+          },
+          geometry: zone.the_geom,
+        }]
+      });
     }
     this.mapView.data.setStyle((feature) => {
       const level = feature.getProperty('hurricane');
@@ -159,11 +168,17 @@ class Map extends Component {
     };
     for (let i = 0; i < zones.locations.length; i++) {
       const zone = zones.locations[i];
-      const inZone = inside(point, zone);
+      const inZone = inside(point, {
+        type: 'Feature',
+        properties: {
+          hurricane: zone.hurricane,
+        },
+        geometry: zone.the_geom,
+      });
       if (inZone) {
         this.props.setInZone(
           true,
-          zone.properties.hurricane
+          zone.hurricane
         );
         this.determineDistance(latitude, longitude);
         return;
@@ -198,15 +213,15 @@ class Map extends Component {
       }
     };
     const distanceArray = shelters.locations.map((location) => {
-      location.properties.distance = distance(
+      location.distance = distance(
         currentLocation,
-        location,
+        location.the_geom,
         'miles'
       );
       return location;
     });
     distanceArray.sort((a, b) => {
-      return a.properties.distance - b.properties.distance;
+      return a.distance - b.distance;
     });
     distanceArray.splice(3);
     this.props.setNearby(distanceArray);

@@ -221,25 +221,24 @@ class InputForm extends Component {
             {inZone && (
               <div className={style.shelters}>
                 {nearbyShelters.map((shelter, index) => {
-                  const props = shelter.properties;
-                  const coords = shelter.geometry.coordinates;
+                  const coords = shelter.the_geom.coordinates;
                   return (
                     <div
                       className={style.shelter}
                       key={index}
                     >
                       <div className={style.shelterInfo}>
-                        <b className={style.streetAddress}>{props.address}</b>
+                        <b className={style.streetAddress}>{shelter.address}</b>
                         {/* eslint-disable max-len */}
-                        <i className={style.district}>{props.city}, {props.state} {parseInt(props.zip_code, 10)}</i>
+                        <i className={style.district}>{shelter.city}, {shelter.state} {parseInt(shelter.zip_code, 10)}</i>
                         <span className={style.distance} aria-label='distance'>
-                          {props.distance.toFixed(2)} <abbr title='miles'>mi</abbr>
+                          {shelter.distance.toFixed(2)} <abbr title='miles'>mi</abbr>
                         </span>
                         {/* eslint-enable max-len */}
                       </div>
                       {/* eslint-disable max-len */}
                       <a
-                        aria-label={`get directions to shelter at ${props.address} ${props.city}, ${props.state}`}
+                        aria-label={`get directions to shelter at ${shelter.address} ${shelter.city}, ${shelter.state}`}
                         className={style.directions}
                         href={ios
                           ? `http://maps.apple.com/?daddr=${coords[1]},${coords[0]}&saddr=${center.lat},${center.long}`
