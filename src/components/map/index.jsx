@@ -124,7 +124,7 @@ class Map extends Component {
         fill = '#C9FFF9';
       }
       return ({
-        visible: !(level === '0' || level === 'X'),
+        visible: !(level === '0' || level === 'X' || level === '7'),
         strokeWeight: 1,
         strokeOpacity: 0.5,
         fillColor: fill,
