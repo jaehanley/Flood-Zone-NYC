@@ -60,7 +60,7 @@ class Map extends Component {
       this.addZonesToMap(nextZones.locations);
     }
     if (shelters.locations !== nextShelters.locations) {
-      this.addSheltersToMap(shelters.locations);
+      this.addSheltersToMap(nextShelters.locations);
     }
     if (nextCenter !== center) {
       this.shiftCenter(nextCenter, true);
