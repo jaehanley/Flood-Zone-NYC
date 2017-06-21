@@ -54,22 +54,18 @@ class Map extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { zones, center } = this.props;
+    const { zones, center, shelters } = this.props;
     const nextZones = nextProps.zones;
     const nextCenter = nextProps.center;
+    const nextShelters = nextProps.shelters;
     if (nextZones.locations !== zones.locations) {
       this.addZonesToMap(nextZones.locations);
     }
+    if (shelters.locations !== nextShelters.locations) {
+      this.addSheltersToMap(shelters.locations);
+    }
     if (nextCenter !== center) {
       this.shiftCenter(nextCenter, true);
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    const { shelters } = this.props;
-    const prevShelters = prevProps.shelters;
-    if (shelters.locations !== prevShelters.locations) {
-      this.addSheltersToMap(shelters.locations);
     }
   }
 
