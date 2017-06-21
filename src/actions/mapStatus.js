@@ -6,6 +6,7 @@ export const SET_WAITING_EVAL = 'SET_WAITING_EVAL';
 export const SET_NEARBY_SHELTERS = 'SET_NEARBY_SHELTERS';
 export const HIDE_AD = 'HIDE_AD';
 export const SHOW_AD = 'SHOW_AD';
+export const SET_MAP_WAITING = 'SET_MAP_WAITING';
 
 export function setCenter(lat, long) {
   return {
@@ -53,5 +54,12 @@ export function hideAd() {
 export function showAd() {
   return {
     type: SHOW_AD,
+  };
+}
+
+export function setMapWaiting(waiting) {
+  return {
+    type: SET_MAP_WAITING,
+    waiting
   };
 }
