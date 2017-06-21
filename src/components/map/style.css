@@ -1,17 +1,16 @@
 @keyframes waiting {
   0% {
-    left: 0;
+    transform: translateX(0);
     width: 0;
   }
 
   50% {
-    left: 0;
+    transform: translateX(0);
     width: 100%;
   }
 
   100% {
-    left: 100%;
-    width: 0;
+    transform: translateX(100%);
   }
 }
 
@@ -65,7 +64,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 4px;
-  background-image: linear-gradient(90deg,#2d2df5,#1111c4);
+  height: 2px;
+  background-color: #1111c4;
   animation: waiting 1s infinite;
 }
