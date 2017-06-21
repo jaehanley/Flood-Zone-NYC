@@ -348,15 +348,24 @@ class Map extends Component {
   }
 
   render() {
-    const { dragging } = this.state;
+    const {
+      dragging,
+      displayMap,
+    } = this.state;
     const {
       firstfound,
       hideAd,
       waitingEval,
     } = this.props;
-    const { displayMap } = this.state;
     return (
       <div className={style.mapContainer} aria-level='2'>
+        {!displayMap && (
+          <div className={style.mapLoading}>
+            <span className={style.mapLoadingText}>
+              Loading&hellip;
+            </span>
+          </div>
+        )}
         <div
           className={
             `${style.mapView} ${dragging
