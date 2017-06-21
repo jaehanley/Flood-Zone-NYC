@@ -2,7 +2,6 @@ import {
   SET_CENTER,
   SET_NEARBY_SHELTERS,
   SET_RAW_LOCATION,
-  SET_MAP_WAITING,
   SET_WAITING_EVAL,
   SET_ZONE_FALSE,
   SET_ZONE_TRUE,
@@ -69,11 +68,6 @@ export default function(state = initialState, action = {}) {
       return {
         ...state,
         nearbyShelters: action.shelters,
-      };
-    case SET_MAP_WAITING:
-      return {
-        ...state,
-        waitingMapLoad: state.waiting,
       };
     case HIDE_AD:
       return {

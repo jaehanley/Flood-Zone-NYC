@@ -6,7 +6,6 @@ import {
   setInZone,
   setRawLocation,
   setNearby,
-  setMapWaiting,
   setWaiting,
 } from '../../actions/mapStatus';
 import AdSlot from '../adSlot';
@@ -31,7 +30,6 @@ class Map extends Component {
     firstfound: PropTypes.bool.isRequired,
     hideAd: PropTypes.bool.isRequired,
     waitingEval: PropTypes.bool.isRequired,
-    setMapWaiting: PropTypes.func.isRequired,
     waitingMapLoad: PropTypes.bool.isRequired,
     setWaiting: PropTypes.func.isRequired,
   }
@@ -420,9 +418,6 @@ function mapDispatchToProps(dispatch) {
     },
     getShelters: () => {
       dispatch(getShelters());
-    },
-    setMapWaiting: (bool) => {
-      dispatch(setMapWaiting(bool));
     },
     setWaiting: (bool) => {
       dispatch(setWaiting(bool));
