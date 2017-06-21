@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import {
   setRawLocation,
   setCenter,
+  setWaiting,
 } from '../../actions/mapStatus';
 import style from './style.css';
 import locationBtn from '../../assets/img/location.svg';
@@ -16,6 +17,7 @@ class InputForm extends Component {
     rawLocation: PropTypes.object.isRequired,
     setCenter: PropTypes.func.isRequired,
     setRawLocation: PropTypes.func.isRequired,
+    setWaiting: PropTypes.func.isRequired,
     waitingEval: PropTypes.bool.isRequired,
   }
 
@@ -34,6 +36,7 @@ class InputForm extends Component {
   }
 
   getGeolocation() {
+    this.props.setWaiting(true);
     navigator.geolocation.getCurrentPosition((pos) => {
       const lat = pos.coords.latitude;
       const lng = pos.coords.longitude;
@@ -75,11 +78,13 @@ class InputForm extends Component {
       if (mixpanel) {
         mixpanel.track('found address by location');
       }
+      this.props.setWaiting(false);
     });
   }
 
   getAddressLocation(event) {
     event.preventDefault();
+    this.props.setWaiting(true);
     this.mapInput.blur();
     const address = this.mapInput.value;
     const google = window.google;
@@ -97,6 +102,7 @@ class InputForm extends Component {
           const lng = results[0].geometry.location.lng();
           this.props.setCenter(lat, lng);
         }
+        this.props.setWaiting(false);
       });
     }
     if (ga) {
@@ -166,16 +172,12 @@ class InputForm extends Component {
       inZone,
       nearbyShelters,
       rawLocation,
-      waitingEval,
     } = this.props;
     const iosApp = window.navigator.standalone;
     const ios = window.navigator.userAgent.match(/iPhone|iPad|iPod/g);
-    let outputMessage = 'Not in an evac zone';
-    if (waitingEval) {
-      outputMessage = 'Loading…';
-    } else if (inZone) {
-      outputMessage = `In evac zone ${containedIn} - nearby shelters`;
-    }
+    const outputMessage = inZone
+    ? `In evac zone ${containedIn} - nearby shelters`
+    : 'Not in an evac zone';
     return (
       <div className={iosApp ? style.inAppMode : style.webMode} aria-level='1'>
         <div className={style.searchContainer}>
@@ -281,6 +283,9 @@ function mapDispatchToProps(dispatch) {
     setCenter: (lat, long) => {
       dispatch(setCenter(lat, long));
     },
+    setWaiting: (bool) => {
+      dispatch(setWaiting(bool));
+    }
   };
 }
 

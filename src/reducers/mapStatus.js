@@ -61,7 +61,7 @@ export default function(state = initialState, action = {}) {
     case SET_WAITING_EVAL:
       return {
         ...state,
-        watingEval: action.waiting,
+        waitingEval: action.waiting,
       };
     case SET_NEARBY_SHELTERS:
       return {
