@@ -28,6 +28,7 @@ class Map extends Component {
     getShelters: PropTypes.func.isRequired,
     firstfound: PropTypes.bool.isRequired,
     hideAd: PropTypes.bool.isRequired,
+    waitingEval: PropTypes.bool.isRequired,
   }
 
   constructor(props) {
@@ -314,7 +315,11 @@ class Map extends Component {
 
   render() {
     const { dragging } = this.state;
-    const { firstfound, hideAd } = this.props;
+    const {
+      firstfound,
+      hideAd,
+      waitingEval,
+    } = this.props;
     return (
       <div className={style.mapContainer} aria-level='2'>
         <div
@@ -324,6 +329,11 @@ class Map extends Component {
         />
         {(firstfound && !hideAd) && (
           <AdSlot />
+        )}
+        {waitingEval && (
+          <div
+            className={style.loadingIndicator}
+          />
         )}
       </div>
     );
@@ -338,6 +348,7 @@ function mapStateToProps(state) {
     zones: state.zones,
     firstfound: state.mapStatus.firstfound,
     hideAd: state.mapStatus.hideAd,
+    waitingEval: state.mapStatus.waitingEval,
   };
 }
 
