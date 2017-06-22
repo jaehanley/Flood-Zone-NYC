@@ -1,10 +1,10 @@
 import {
   SET_CENTER,
-  SET_ZONE_TRUE,
-  SET_ZONE_FALSE,
+  SET_NEARBY_SHELTERS,
   SET_RAW_LOCATION,
   SET_WAITING_EVAL,
-  SET_NEARBY_SHELTERS,
+  SET_ZONE_FALSE,
+  SET_ZONE_TRUE,
   HIDE_AD,
   SHOW_AD,
 } from '../actions/mapStatus';
@@ -20,10 +20,11 @@ const initialState = {
     string: null,
     type: null,
   },
-  waitingEval: false,
+  waitingEval: true,
   nearbyShelters: [],
   firstfound: false,
   hideAd: false,
+  waitingMapLoad: false,
 };
 
 export default function(state = initialState, action = {}) {

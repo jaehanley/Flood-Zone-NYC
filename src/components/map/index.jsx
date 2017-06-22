@@ -6,6 +6,7 @@ import {
   setInZone,
   setRawLocation,
   setNearby,
+  setWaiting,
 } from '../../actions/mapStatus';
 import AdSlot from '../adSlot';
 import { getZones } from '../../actions/zones';
@@ -29,6 +30,8 @@ class Map extends Component {
     firstfound: PropTypes.bool.isRequired,
     hideAd: PropTypes.bool.isRequired,
     waitingEval: PropTypes.bool.isRequired,
+    waitingMapLoad: PropTypes.bool.isRequired,
+    setWaiting: PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -37,6 +40,10 @@ class Map extends Component {
       map: null,
       dragging: false,
       programaticShift: false,
+      sheltersOnMap: false,
+      zonesOnMap: false,
+      mapLoaded: false,
+      displayMap: false,
     };
   }
 
@@ -45,22 +52,18 @@ class Map extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { zones, center } = this.props;
+    const { zones, center, shelters } = this.props;
     const nextZones = nextProps.zones;
     const nextCenter = nextProps.center;
+    const nextShelters = nextProps.shelters;
     if (nextZones.locations !== zones.locations) {
       this.addZonesToMap(nextZones.locations);
     }
+    if (shelters.locations !== nextShelters.locations) {
+      this.addSheltersToMap(nextShelters.locations);
+    }
     if (nextCenter !== center) {
       this.shiftCenter(nextCenter, true);
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    const { shelters } = this.props;
-    const prevShelters = prevProps.shelters;
-    if (shelters.locations !== prevShelters.locations) {
-      this.addSheltersToMap(shelters.locations);
     }
   }
 
@@ -89,6 +92,7 @@ class Map extends Component {
   }
 
   addSheltersToMap(shelters) {
+    const { zonesOnMap, mapLoaded } = this.state;
     const google = window.google;
     for (let i = 0; i < shelters.length; i++) {
       const shelter = shelters[i];
@@ -101,9 +105,17 @@ class Map extends Component {
       });
       marker.setMap(this.mapView);
     }
+    this.setState({
+      sheltersOnMap: true,
+      displayMap: zonesOnMap && mapLoaded
+    });
+    if (zonesOnMap && mapLoaded) {
+      this.props.setWaiting(false);
+    }
   }
 
   addZonesToMap(zones) {
+    const { sheltersOnMap, mapLoaded } = this.state;
     for (let i = 0; i < zones.length; i++) {
       const zone = zones[i];
       this.mapView.data.addGeoJson({
@@ -141,6 +153,13 @@ class Map extends Component {
         fillOpacity: 0.8,
       });
     });
+    this.setState({
+      zonesOnMap: true,
+      displayMap: sheltersOnMap && mapLoaded
+    });
+    if (sheltersOnMap && mapLoaded) {
+      this.props.setWaiting(false);
+    }
   }
 
   shiftCenter(center, programaticShift = false) {
@@ -230,11 +249,20 @@ class Map extends Component {
 
   initMap() {
     const { center } = this.props;
+    const { zonesOnMap, sheltersOnMap } = this.state;
     const { ga, mixpanel, google } = window;
     const startCenter = new google.maps.LatLng(
       center.lat,
       center.lng
     );
+
+    this.setState({
+      mapLoaded: true,
+      displayMap: zonesOnMap && sheltersOnMap
+    });
+    if (zonesOnMap && sheltersOnMap) {
+      this.props.setWaiting(false);
+    }
 
     this.mapView = new google.maps.Map(
       document.getElementById('map'),
@@ -314,7 +342,10 @@ class Map extends Component {
   }
 
   render() {
-    const { dragging } = this.state;
+    const {
+      dragging,
+      displayMap,
+    } = this.state;
     const {
       firstfound,
       hideAd,
@@ -322,8 +353,23 @@ class Map extends Component {
     } = this.props;
     return (
       <div className={style.mapContainer} aria-level='2'>
+        {!displayMap && (
+          <div className={style.mapLoading}>
+            <span className={style.mapLoadingText}>
+              Loading&hellip;
+            </span>
+          </div>
+        )}
         <div
-          className={`${style.mapView} ${dragging ? style.active : ''}`}
+          className={
+            `${style.mapView} ${dragging
+              ? style.active
+              : ''
+            } ${displayMap
+              ? style.visible
+              : ''
+            }`
+          }
           id='map'
           aria-level='2'
         />
@@ -349,6 +395,7 @@ function mapStateToProps(state) {
     firstfound: state.mapStatus.firstfound,
     hideAd: state.mapStatus.hideAd,
     waitingEval: state.mapStatus.waitingEval,
+    waitingMapLoad: state.mapStatus.waitingMapLoad,
   };
 }
 
@@ -371,6 +418,9 @@ function mapDispatchToProps(dispatch) {
     },
     getShelters: () => {
       dispatch(getShelters());
+    },
+    setWaiting: (bool) => {
+      dispatch(setWaiting(bool));
     },
   };
 }
