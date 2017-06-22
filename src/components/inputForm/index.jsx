@@ -79,6 +79,7 @@ class InputForm extends Component {
         mixpanel.track('found address by location');
       }
       this.props.setWaiting(false);
+      this.geoBtn.blur();
     });
   }
 
@@ -205,6 +206,7 @@ class InputForm extends Component {
                     backgroundImage: `url(${locationBtn})`
                   }}
                   onClick={this.getGeolocation.bind(this)}
+                  ref={(c) => { this.geoBtn = c; }}
                   tabIndex='1'
                 />
               )}
