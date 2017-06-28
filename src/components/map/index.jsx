@@ -351,32 +351,46 @@ class Map extends Component {
       hideAd,
       waitingEval,
     } = this.props;
+    let online = true;
+    if (window && window.onLine) {
+      online = window.onLine;
+    }
+
     return (
       <div className={style.mapContainer} aria-level='2'>
-        {!displayMap && (
+        {!online && (
+          <div className={style.mapLoading}>
+            <h2>Offline</h2>{
+            // eslint-disable-next-line max-len
+            }<p>Flood Zone NYC requires an internet connection. Please connect to the internet and try again.</p>
+          </div>
+        )}
+        {(!displayMap && online) && (
           <div className={style.mapLoading}>
             <span className={style.mapLoadingText}>
               Loading&hellip;
             </span>
           </div>
         )}
-        <div
-          className={
-            `${style.mapView} ${dragging
-              ? style.active
-              : ''
-            } ${displayMap
-              ? style.visible
-              : ''
-            }`
-          }
-          id='map'
-          aria-level='2'
-        />
-        {(firstfound && !hideAd) && (
+        {online && (
+          <div
+            className={
+              `${style.mapView} ${dragging
+                ? style.active
+                : ''
+              } ${displayMap
+                ? style.visible
+                : ''
+              }`
+            }
+            id='map'
+            aria-level='2'
+          />
+        )}
+        {(firstfound && !hideAd && online) && (
           <AdSlot />
         )}
-        {waitingEval && (
+        {(waitingEval && online) && (
           <div
             className={style.loadingIndicator}
           />

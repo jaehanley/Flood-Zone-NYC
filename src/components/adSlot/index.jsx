@@ -12,6 +12,7 @@ class adSlot extends Component {
 
   constructor(props) {
     super(props);
+    this.resizeAd = this.resizeAd.bind(this);
     const { innerWidth } = window;
     let size = 'mobile';
     if (innerWidth >= 738) {
@@ -52,7 +53,7 @@ class adSlot extends Component {
           mixpanel.track('ad loaded');
         }
       });
-      window.addEventListener('resize', this.resizeAd.bind(this));
+      window.addEventListener('resize', this.resizeAd);
     }
   }
 

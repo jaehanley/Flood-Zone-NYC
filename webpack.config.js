@@ -4,8 +4,8 @@ var webpack = require('webpack');
 var autoprefixer = require('autoprefixer');
 var postcssImport = require('postcss-import');
 var postcssCalc = require('postcss-calc');
-var WebpackAssetsManifest = require('webpack-assets-manifest');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var ManifestPlugin = require('webpack-manifest-plugin');
 
 var env = process.env.NODE_ENV || 'development';
 var isProduction = env === 'production';
@@ -85,7 +85,8 @@ var config = {
     }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(env)
-    })
+    }),
+    new ManifestPlugin()
   ]
 };
 
