@@ -8,7 +8,6 @@ import {
   setNearby,
   setWaiting,
 } from '../../actions/mapStatus';
-import AdSlot from '../adSlot';
 import { getZones } from '../../actions/zones';
 import { getShelters } from '../../actions/shelters';
 import mapStyle from '../../utils/mapStyle.js';
@@ -27,7 +26,6 @@ class Map extends Component {
     setNearby: PropTypes.func.isRequired,
     getZones: PropTypes.func.isRequired,
     getShelters: PropTypes.func.isRequired,
-    firstfound: PropTypes.bool.isRequired,
     hideAd: PropTypes.bool.isRequired,
     waitingEval: PropTypes.bool.isRequired,
     waitingMapLoad: PropTypes.bool.isRequired,
@@ -347,7 +345,6 @@ class Map extends Component {
       displayMap,
     } = this.state;
     const {
-      firstfound,
       hideAd,
       waitingEval,
     } = this.props;
@@ -388,9 +385,6 @@ class Map extends Component {
             aria-level='2'
           />
         )}
-        {(firstfound && !hideAd && online) && (
-          <AdSlot />
-        )}
         {(waitingEval && online) && (
           <div
             className={[
@@ -410,7 +404,6 @@ function mapStateToProps(state) {
     center: state.mapStatus.center,
     shelters: state.shelters,
     zones: state.zones,
-    firstfound: state.mapStatus.firstfound,
     hideAd: state.mapStatus.hideAd,
     waitingEval: state.mapStatus.waitingEval,
     waitingMapLoad: state.mapStatus.waitingMapLoad,
