@@ -42,7 +42,7 @@ var config = {
       },
       {
         test: /\.json/,
-        loader: 'file!json',
+        loader: 'file-loader!json',
         include: [path.join(__dirname, 'src')]
       }
     ]
