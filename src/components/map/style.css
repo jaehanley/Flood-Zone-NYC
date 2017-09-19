@@ -80,4 +80,9 @@
   height: 2px;
   background-color: #1111c4;
   animation: waiting 1s infinite;
+
+  &.inApp {
+    top: auto;
+    bottom: 0;
+  }
 }
