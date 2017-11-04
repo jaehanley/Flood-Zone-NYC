@@ -352,6 +352,7 @@ class Map extends Component {
       waitingEval,
     } = this.props;
     let online = true;
+    const iosApp = window.navigator.standalone;
     if (window && window.onLine) {
       online = window.onLine;
     }
@@ -392,7 +393,10 @@ class Map extends Component {
         )}
         {(waitingEval && online) && (
           <div
-            className={style.loadingIndicator}
+            className={[
+              style.loadingIndicator,
+              iosApp ? style.inApp : undefined
+            ].join(' ')}
           />
         )}
       </div>

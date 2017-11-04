@@ -34,6 +34,7 @@
     left: 0;
     width: 100%;
     height: 80px;
+    height: calc(80px + constant(safe-area-inset-top));
     background-image: linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0));
   }
 }
@@ -50,6 +51,14 @@
 
   .inAppMode & {
     top: 30px;
+
+    @media screen and (device-height: 812px) and (orientation: portrait) {
+      top: constant(safe-area-inset-top);
+    }
+
+    @media screen and (max-device-width: 450px) and (orientation: landscape) {
+      top: 10px;
+    }
   }
 }
 
