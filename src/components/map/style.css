@@ -82,7 +82,7 @@
 
   &.active {
     &::before {
-      transform: translate(-50%, calc(-50% - 20px))scale(1.2);
+      transform: translate(-50%,calc(-50% - 20px))scale(1.2);
       opacity: 0.3;
     }
     
