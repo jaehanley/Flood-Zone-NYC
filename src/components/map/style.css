@@ -76,7 +76,7 @@
     background-image: url('../../assets/img/marker.svg');
     transition: all 0.2s;
     background-position: center center;
-    background-repeat: none;
+    background-repeat: no-repeat;
     z-index: 2;
   }
 
