@@ -45,24 +45,49 @@
   transform: scale(1.4);
   transition: all 0.6s;
 
-  &:after {
+  &::before,
+  &::after {
+    pointer-events: none;
+  }
+
+  &::before {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 20px;
-    height: 20px;
-    transform: translate(-10px,-10px);
+    width: 10px;
+    height: 10px;
+    background-color: rgba(0,0,0,0.3);
+    border-radius: 5px;
     content: '';
-    border-radius: 10px;
-    background-image: url('../../assets/img/marker.svg');
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transform: translate(-50%,calc(-50% - 20px));
+    z-index: 1;
     transition: all 0.2s;
   }
 
+  &::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 28px;
+    height: 40px;
+    transform: translate(-50%,calc(-50% - 40px));
+    content: '';
+    border-radius: 10px;
+    background-image: url('../../assets/img/marker.svg');
+    transition: all 0.2s;
+    background-position: center center;
+    background-repeat: no-repeat;
+    z-index: 2;
+  }
+
   &.active {
-    &:after {
-      transform: translate(-10px,-20px);
-      box-shadow: 0 12px 4px rgba(0,0,0,0.1);
+    &::before {
+      transform: translate(-50%,calc(-50% - 20px))scale(1.2);
+      opacity: 0.3;
+    }
+    
+    &::after {
+      transform: translate(-50%,calc(-50% - 50px));
     }
   }
 
