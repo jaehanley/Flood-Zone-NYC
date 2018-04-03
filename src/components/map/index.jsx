@@ -141,7 +141,7 @@ class Map extends Component {
       } else if (level === '4') {
         fill = '#7768D7';
       } else if (level === '5') {
-        fill = '#8EBDF0';
+        fill = '#68a8ed';
       } else if (level === '6') {
         fill = '#C9FFF9';
       }

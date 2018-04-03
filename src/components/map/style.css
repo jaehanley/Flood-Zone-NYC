@@ -59,7 +59,7 @@
     background-color: rgba(0,0,0,0.3);
     border-radius: 5px;
     content: '';
-    transform: translate(-50%,calc(-50% - 20px));
+    transform: translate(-50%,-50%);
     z-index: 1;
     transition: all 0.2s;
   }
@@ -70,7 +70,7 @@
     left: 50%;
     width: 28px;
     height: 40px;
-    transform: translate(-50%,calc(-50% - 40px));
+    transform: translate(-50%,-100%);
     content: '';
     border-radius: 10px;
     background-image: url('../../assets/img/marker.svg');
@@ -82,12 +82,14 @@
 
   &.active {
     &::before {
-      transform: translate(-50%,calc(-50% - 20px))scale(1.2);
+      transform: translate(-50%,-50%)scale(1.2);
       opacity: 0.3;
     }
     
     &::after {
-      transform: translate(-50%,calc(-50% - 50px));
+      transform: translate(
+        -50%,calc(-100% - 40px)
+      )scale(1.1);
     }
   }
 
