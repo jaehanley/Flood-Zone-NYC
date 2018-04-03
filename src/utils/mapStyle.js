@@ -51,7 +51,7 @@ export default [
     elementType: 'geometry',
     stylers: [
       {
-        lightness: -10
+        lightness: -30
       },
       {
         saturation: -100
