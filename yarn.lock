@@ -1262,6 +1262,10 @@ babel-plugin-transform-global-system-wrapper@^0.3.4:
   dependencies:
     babel-template "^6.9.0"
 
+babel-plugin-transform-inline-environment-variables@^0.4.3:
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/babel-plugin-transform-inline-environment-variables/-/babel-plugin-transform-inline-environment-variables-0.4.3.tgz#a3b09883353be8b5e2336e3ff1ef8a5d93f9c489"
+
 babel-plugin-transform-jscript@^6.5.0:
   version "6.22.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-transform-jscript/-/babel-plugin-transform-jscript-6.22.0.tgz#6e8af12b7aba49e0a809152616ac05690b3352dc"
@@ -2448,6 +2452,10 @@ dot-case@^2.1.0:
   resolved "https://registry.yarnpkg.com/dot-case/-/dot-case-2.1.1.tgz#34dcf37f50a8e93c2b3bca8bb7fb9155c7da3bee"
   dependencies:
     no-case "^2.2.0"
+
+dotenv@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-5.0.1.tgz#a5317459bd3d79ab88cff6e44057a6a3fbb1fcef"
 
 duplexer2@0.0.2:
   version "0.0.2"
