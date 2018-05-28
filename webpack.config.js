@@ -6,12 +6,15 @@ var postcssImport = require('postcss-import');
 var postcssCalc = require('postcss-calc');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ManifestPlugin = require('webpack-manifest-plugin');
+var dotenv = require('dotenv');
 
 var env = process.env.NODE_ENV || 'development';
 var isProduction = env === 'production';
 var isDevelopment = env === 'development';
 var isTest = env === 'test';
 var cssModuleIdentName = env === 'development' ? '[path][name]---[local]---[hash:base64:5]' : '[hash:base64]';
+
+dotenv.config({path: path.join(__dirname, isDevelopment ? '.env.dev' : '.env')});
 
 var config = {
   entry: ['./src/index.jsx'],
@@ -86,9 +89,14 @@ var config = {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(env)
     }),
+    new webpack.DefinePlugin({
+      'process.env.map_key': JSON.stringify(process.env.map_key)
+    }),
     new ManifestPlugin()
   ]
 };
+
+console.log({mapKey: process.env.map_key});
 
 if (isProduction) {
   config.output = {
