@@ -96,8 +96,6 @@ var config = {
   ]
 };
 
-console.log({mapKey: process.env.map_key});
-
 if (isProduction) {
   config.output = {
     path: path.join(__dirname, 'dist'),
