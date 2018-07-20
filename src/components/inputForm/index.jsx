@@ -7,6 +7,7 @@ import {
 } from '../../actions/mapStatus';
 import style from './style.css';
 import locationBtn from '../../assets/img/location.svg';
+import menuIcon from '../../assets/img/menu-btn.svg';
 
 class InputForm extends Component {
   static propTypes = {
@@ -184,6 +185,17 @@ class InputForm extends Component {
         <div className={style.searchContainer}>
           <div className={style.topView}>
             <div className={style.inputContainer}>
+              <button
+                aria-label='Options'
+                className={style.optionsToggle}
+                tabIndex='1'
+              >
+                <img
+                  aria-hidden
+                  alt='Options'
+                  src={menuIcon}
+                />
+              </button>
               <form
                 onSubmit={this.getAddressLocation.bind(this)}
               >
