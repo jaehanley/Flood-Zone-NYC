@@ -6,7 +6,6 @@ import {
   setWaiting,
 } from '../../actions/mapStatus';
 import style from './style.css';
-import locationBtn from '../../assets/img/location.svg';
 
 class InputForm extends Component {
   static propTypes = {
@@ -202,9 +201,6 @@ class InputForm extends Component {
                 <button
                   aria-label='Find by location'
                   className={style.geolocate}
-                  style={{
-                    backgroundImage: `url(${locationBtn})`
-                  }}
                   onClick={this.getGeolocation.bind(this)}
                   ref={(c) => { this.geoBtn = c; }}
                   tabIndex='1'
