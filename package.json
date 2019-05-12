@@ -9,12 +9,13 @@
     "deploy": "npm run build && firebase deploy"
   },
   "keywords": [
-    "test",
-    "brightcove",
-    "validator"
+    "Map",
+    "Evacuation",
+    "New York City",
+    "Emergency"
   ],
   "author": "Darrell Hanley",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "dependencies": {
     "@turf/turf": "3.5.2",
     "babel": "6.5.2",
