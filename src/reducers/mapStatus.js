@@ -5,8 +5,6 @@ import {
   SET_WAITING_EVAL,
   SET_ZONE_FALSE,
   SET_ZONE_TRUE,
-  HIDE_AD,
-  SHOW_AD,
 } from '../actions/mapStatus';
 
 const initialState = {
@@ -23,7 +21,6 @@ const initialState = {
   waitingEval: true,
   nearbyShelters: [],
   firstfound: false,
-  hideAd: false,
   waitingMapLoad: false,
 };
 
@@ -68,16 +65,6 @@ export default function(state = initialState, action = {}) {
       return {
         ...state,
         nearbyShelters: action.shelters,
-      };
-    case HIDE_AD:
-      return {
-        ...state,
-        hideAd: true,
-      };
-    case SHOW_AD:
-      return {
-        ...state,
-        hideAd: false,
       };
     default:
       return state;

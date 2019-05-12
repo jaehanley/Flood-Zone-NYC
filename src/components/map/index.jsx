@@ -26,7 +26,6 @@ class Map extends Component {
     setNearby: PropTypes.func.isRequired,
     getZones: PropTypes.func.isRequired,
     getShelters: PropTypes.func.isRequired,
-    hideAd: PropTypes.bool.isRequired,
     waitingEval: PropTypes.bool.isRequired,
     waitingMapLoad: PropTypes.bool.isRequired,
     setWaiting: PropTypes.func.isRequired,
@@ -345,7 +344,6 @@ class Map extends Component {
       displayMap,
     } = this.state;
     const {
-      hideAd,
       waitingEval,
     } = this.props;
     let online = true;
@@ -404,7 +402,6 @@ function mapStateToProps(state) {
     center: state.mapStatus.center,
     shelters: state.shelters,
     zones: state.zones,
-    hideAd: state.mapStatus.hideAd,
     waitingEval: state.mapStatus.waitingEval,
     waitingMapLoad: state.mapStatus.waitingMapLoad,
   };
