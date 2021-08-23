@@ -75,14 +75,14 @@
   font-weight: 600;
   font-size: 14px;
   background-color: #e3e3e3;
-  border-radius: 0 0 4px 4px;
+  border-radius: 4px;
   transition: all 0.2s;
   z-index: 2;
 
   &.activeZone {
     color: #fff;
     background-color: #222;
-    border-radius: 0;
+    border-radius: 4px 4px 0 0;
   }
 }
 
@@ -103,7 +103,7 @@
 .shelter {
   display: flex;
   border-bottom: solid 1px #e8e8e8;
-  height: 60px;
+  height: 50px;
   align-items: center;
   justify-content: space-between;
 }
@@ -161,6 +161,7 @@
   overflow: hidden;
   box-shadow: 0 1px 5px rgba(0,0,0,0.2);
   z-index: 2;
+  margin-bottom: 5px;
 
   form {
     flex: 1 0;

@@ -299,9 +299,7 @@ class Map extends Component {
         const lng = this.mapView.getCenter().lng();
         if (prevCenter !== { lat, lng }) {
           prevCenter = { lat, lng };
-          if (!programaticShift) {
-            this.setMapAddress(lat, lng);
-          } else {
+          if (programaticShift) {
             this.setState({
               programaticShift: false,
             });

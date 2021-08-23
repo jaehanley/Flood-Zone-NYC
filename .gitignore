@@ -5,6 +5,7 @@ npm-debug.log
 dump.rdb
 .vscode/
 public/*
+.firebase/
 dist
 coverage/
 .nyc_output/
