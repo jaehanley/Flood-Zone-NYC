@@ -14,7 +14,10 @@
     "New York City",
     "Emergency"
   ],
-  "author": "Darrell Hanley",
+  "author": {
+    "name": "Jae Hanley",
+    "email": "hi@jaehanley.com"
+  },
   "license": "MIT",
   "dependencies": {
     "@turf/turf": "3.5.2",
