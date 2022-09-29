@@ -64,6 +64,11 @@ class Map extends Component {
     }
   }
 
+  /**
+   * Sets the address associated with the current map center
+   * @param {number} lat 
+   * @param {number} lng 
+   */
   setMapAddress(lat, lng) {
     const google = window.google;
     if (google) {
@@ -88,11 +93,20 @@ class Map extends Component {
     }
   }
 
+  /**
+   * Adds shelters to the map
+   * @typedef {{
+   *  ec_name: string,
+   * the_geom: {
+   *  coordinates: [number, number]
+   * }
+   * }} shelter
+   * @param {shelter[]} shelters 
+   */
   addSheltersToMap(shelters) {
     const { zonesOnMap, mapLoaded } = this.state;
     const google = window.google;
-    for (let i = 0; i < shelters.length; i++) {
-      const shelter = shelters[i];
+    shelters.map(shelter => {
       const coords = shelter.the_geom.coordinates;
       const googCoords = new google.maps.LatLng(coords[1], coords[0]);
       const marker = new google.maps.Marker({
@@ -101,7 +115,7 @@ class Map extends Component {
         icon: evacImg,
       });
       marker.setMap(this.mapView);
-    }
+    });
     this.setState({
       sheltersOnMap: true,
       displayMap: zonesOnMap && mapLoaded
@@ -113,8 +127,7 @@ class Map extends Component {
 
   addZonesToMap(zones) {
     const { sheltersOnMap, mapLoaded } = this.state;
-    for (let i = 0; i < zones.length; i++) {
-      const zone = zones[i];
+    zones.forEach(zone => {
       this.mapView.data.addGeoJson({
         type: 'FeatureCollection',
         features: [{
@@ -125,7 +138,7 @@ class Map extends Component {
           geometry: zone.the_geom,
         }]
       });
-    }
+    });
     this.mapView.data.setStyle((feature) => {
       const level = feature.getProperty('hurricane');
       let fill;
@@ -204,6 +217,9 @@ class Map extends Component {
     this.props.setInZone(false);
   }
 
+  /**
+   * Mounts the Google Maps component
+   */
   mountMaps() {
     const mapScriptDom = document.getElementById('mapScript');
     if (!mapScriptDom) {
