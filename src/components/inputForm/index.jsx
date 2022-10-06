@@ -228,7 +228,9 @@ class InputForm extends Component {
                       key={index}
                     >
                       <div className={style.shelterInfo}>
-                        <b className={style.streetAddress}>{shelter.address}</b>
+                        <b className={style.streetAddress}>
+                          {shelter.bldg_add}
+                        </b>
                         {/* eslint-disable max-len */}
                         <i className={style.district}>{shelter.city}, {shelter.state} {parseInt(shelter.zip_code, 10)}</i>
                         <span className={style.distance} aria-label='distance'>

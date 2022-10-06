@@ -103,7 +103,7 @@
 .shelter {
   display: flex;
   border-bottom: solid 1px #e8e8e8;
-  height: 50px;
+  height: 70px;
   align-items: center;
   justify-content: space-between;
 }

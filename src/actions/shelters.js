@@ -12,7 +12,7 @@ export function getShelters() {
       SHELTERS_FAILURE,
     ],
     // eslint-disable-next-line
-    request: () => getJSON('https://data.cityofnewyork.us/resource/addd-ji6a.json'),
+    request: () => getJSON('https://data.cityofnewyork.us/resource/p5md-weyf.json'),
     shouldRequest: (state) => {
       return state.shelters.locations.length === 0;
     }
