@@ -3,7 +3,6 @@ import {
   ZONES_RECEIVED,
   ZONES_FAILURE,
 } from '../actions/zones';
-import modelZones from '../models/mapData';
 
 const initialState = {
   locations: [],
@@ -21,7 +20,7 @@ export default function(state = initialState, action = {}) {
     case ZONES_RECEIVED:
       return {
         ...state,
-        locations: modelZones(action.response),
+        locations: action.response,
         loading: false,
       };
     case ZONES_FAILURE:

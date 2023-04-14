@@ -113,37 +113,44 @@ class Map extends Component {
 
   addZonesToMap(zones) {
     const { sheltersOnMap, mapLoaded } = this.state;
-    for (let i = 0; i < zones.length; i++) {
-      const zone = zones[i];
-      this.mapView.data.addGeoJson({
-        type: 'FeatureCollection',
-        features: [{
-          type: 'Feature',
-          properties: {
-            hurricane: zone.hurricane,
-          },
-          geometry: zone.the_geom,
-        }]
-      });
-    }
+    zones.map(zone => this.mapView.data.addGeoJson({
+      type: 'FeatureCollection',
+      features: [{
+        type: 'Feature',
+        properties: {
+          zone: zone.evac_zone,
+        },
+        geometry: zone.the_geom,
+      }]
+    }));
     this.mapView.data.setStyle((feature) => {
-      const level = feature.getProperty('hurricane');
+      const level = feature.getProperty('zone');
+      /**
+       * @type string | undefined
+       */
       let fill;
-      if (level === '1') {
-        fill = '#2F002E';
-      } else if (level === '2') {
-        fill = '#09355B';
-      } else if (level === '3') {
-        fill = '#1D9D8F';
-      } else if (level === '4') {
-        fill = '#7768D7';
-      } else if (level === '5') {
-        fill = '#68a8ed';
-      } else if (level === '6') {
-        fill = '#C9FFF9';
+      switch (level) {
+        case '6':
+          fill = '#C9FFF9';
+          break;
+        case '5':
+          fill = '#68a8ed';
+          break;
+        case '4':
+          fill = '#7768D7';
+          break;
+        case '3':
+          fill = '#1D9D8F';
+          break;
+        case '2':
+          fill = '#09355B';
+          break;
+        case '1':
+        default:
+          fill = '#2F002E';
+          break;
       }
       return ({
-        visible: !(level === '0' || level === 'X' || level === '7'),
         strokeWeight: 1,
         strokeOpacity: 0.5,
         fillColor: fill,
@@ -188,14 +195,14 @@ class Map extends Component {
       const inZone = inside(point, {
         type: 'Feature',
         properties: {
-          hurricane: zone.hurricane,
+          zone: zone.evac_zone,
         },
         geometry: zone.the_geom,
       });
       if (inZone) {
         this.props.setInZone(
           true,
-          zone.hurricane
+          zone.evac_zone,
         );
         this.determineDistance(latitude, longitude);
         return;
@@ -297,7 +304,7 @@ class Map extends Component {
         const { programaticShift } = this.state;
         const lat = this.mapView.getCenter().lat();
         const lng = this.mapView.getCenter().lng();
-        if (prevCenter !== { lat, lng }) {
+        if (prevCenter.lat !== lat && prevCenter.lng !== lng) {
           prevCenter = { lat, lng };
           if (programaticShift) {
             this.setState({
