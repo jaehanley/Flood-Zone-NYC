@@ -12,6 +12,11 @@ function parseJSON(response) {
   return response.json();
 }
 
+/**
+ * Request JSON from a URL and return a promise
+ * @param {string} url The URL to request
+ * @param {RequestInit} options Options for the fetch request
+ */
 export default function getJSON(url, options) {
   return fetch(url, options)
   .then(checkStatus)
